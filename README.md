@@ -1,9 +1,18 @@
 # Stan na Dan Nis
 
-Repo sadrzi Next.js aplikaciju za stan na dan u Nisu.
+Next.js aplikacija za stan na dan u Nisu sa:
+
+- javnim sajtom za pregled apartmana i slanje upita
+- admin panelom za upravljanje apartmanima, rezervacijama i kalendarom
+- Google prijavom za posetioce i admine
+- Booking.com iCal import/export sinhronizacijom
 
 ## Deploy
 
-- Vercel Root Directory: `admintemplate`
-- Google OAuth env vrednosti: pogledaj `admintemplate/.env.example`
-- Booking.com sync: iCal import/export je spreman, a partner API moze da se doda kasnije
+- Framework preset: `Next.js`
+- Root Directory: repository root
+- Environment variables: pogledaj `.env.example`
+
+## Napomena
+
+Folderi `frontend` i `wetransfer_*` ostaju samo kao lokalna referenca i nisu deo deploy aplikacije.
