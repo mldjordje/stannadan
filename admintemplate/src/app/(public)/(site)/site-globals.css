@@ -1,0 +1,93 @@
+@import url("../../../../public/site-assets/css/bootstrap.min.css");
+@import url("../../../../public/site-assets/css/phosphor-icons-bold.css");
+@import url("../../../../public/site-assets/css/phosphor-icons-fill.css");
+@import url("../../../../public/site-assets/css/phosphor-icons-regular.css");
+@import url("../../../../public/site-assets/css/main.css");
+@import url("../../../../public/site-assets/css/extra.css");
+
+.site-app {
+	background: linear-gradient(180deg, #0d1724 0%, #16263b 45%, #081019 100%);
+	color: #fff;
+}
+
+.site-page-hero {
+	padding: 180px 0 90px;
+}
+
+.site-footer {
+	background: #081019;
+}
+
+.site-surface {
+	background: rgba(8, 16, 25, 0.72);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 24px;
+	backdrop-filter: blur(12px);
+}
+
+.site-card {
+	background: rgba(8, 16, 25, 0.72);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 24px;
+	padding: 20px;
+}
+
+.site-card-image {
+	height: 280px;
+	object-fit: cover;
+}
+
+.site-card-badge {
+	position: absolute;
+	right: 16px;
+	bottom: 16px;
+	background: rgba(12, 19, 30, 0.84);
+	border-radius: 999px;
+	padding: 10px 16px;
+	color: #fff;
+	font-size: 15px;
+}
+
+.site-input {
+	width: 100%;
+	border-radius: 16px;
+	border: 1px solid rgba(255, 255, 255, 0.14);
+	background: rgba(255, 255, 255, 0.06);
+	padding: 14px 18px;
+	color: #fff;
+}
+
+.site-input::placeholder {
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.site-textarea {
+	min-height: 140px;
+	resize: vertical;
+}
+
+.site-stat {
+	border-radius: 24px;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	background: rgba(255, 255, 255, 0.04);
+	padding: 24px;
+}
+
+.site-mini-card {
+	border-radius: 18px;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	background: rgba(255, 255, 255, 0.04);
+	padding: 20px;
+}
+
+.site-hero-overlay {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(90deg, rgba(5, 10, 17, 0.9) 0%, rgba(5, 10, 17, 0.55) 52%, rgba(5, 10, 17, 0.25) 100%);
+}
+
+.site-gallery-grid img {
+	border-radius: 20px;
+	height: 220px;
+	object-fit: cover;
+}

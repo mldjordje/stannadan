@@ -1,0 +1,214 @@
+import { StayData } from './types';
+
+const now = '2026-03-26T09:00:00.000Z';
+
+export const defaultStayData: StayData = {
+	property: {
+		name: 'Stan na Dan Nis',
+		tagline: 'Moderni apartmani u centru Nisa sa direktnom i Booking.com prodajom',
+		city: 'Nis',
+		country: 'Serbia',
+		address: 'Obrenoviceva 12, Medijana, Nis',
+		phone: '+381 60 123 4567',
+		email: 'rezervacije@stannadannis.rs',
+		googleMapsUrl: 'https://maps.google.com/?q=Nis+Serbia',
+		heroImage: '/site-assets/images/custom/hero-main.jpeg',
+		description:
+			'Boutique kolekcija apartmana za kratkorocni najam u Nisu, optimizovana za direktne rezervacije, repeat goste i svakodnevno upravljanje dostupnoscu.',
+		highlights: [
+			'Samostalno prijavljivanje i digitalna uputstva za goste',
+			'Interaktivni kalendar sa blokadama, ciscenjem i rezervacijama',
+			'Google prijava za goste i admin tim',
+			'Booking.com iCal import/export spreman za sinhronizaciju'
+		],
+		neighborhood: [
+			{ label: 'Tvrdjava Nis', distance: '7 min peske' },
+			{ label: 'Kazandzijsko sokace', distance: '4 min peske' },
+			{ label: 'Aerodrom Konstantin Veliki', distance: '12 min kolima' }
+		]
+	},
+	apartments: [
+		{
+			id: 'apt-fortress-loft',
+			slug: 'fortress-loft',
+			name: 'Fortress Loft',
+			teaser: 'Dizajniran studio za parove i poslovna putovanja blizu tvrdjave.',
+			description:
+				'Fortress Loft kombinuje topao boutique enterijer, radni kutak i brz pristup centru grada. Idealan je za goste koji zele samostalni check-in i tihu noc u centru Nisa.',
+			coverImage: '/site-assets/images/custom/kitchen-tv.jpeg',
+			gallery: [
+				'/site-assets/images/custom/kitchen-tv.jpeg',
+				'/site-assets/images/custom/living-room.jpeg',
+				'/site-assets/images/custom/studio-vertical.jpeg'
+			],
+			guests: 2,
+			beds: 1,
+			baths: 1,
+			size: 32,
+			pricePerNight: 54,
+			cleaningFee: 12,
+			rating: 4.95,
+			reviewCount: 124,
+			featured: true,
+			locationNote: 'Centar Nisa, 300m od pesacke zone',
+			amenities: ['Self check-in', 'Fast Wi-Fi', 'Air conditioning', 'Kitchen', 'Workspace', 'Smart TV'],
+			rules: ['Check-in od 14:00', 'Nema pusenja', 'Mir posle 22h']
+		},
+		{
+			id: 'apt-riverside-suite',
+			slug: 'riverside-suite',
+			name: 'Riverside Suite',
+			teaser: 'Komforan apartman sa balkonom za duze boravke i porodice.',
+			description:
+				'Riverside Suite ima odvojenu spavacu sobu, dnevni boravak i balkon. Podesen je za porodice, duze boravke i goste koji dolaze automobilom.',
+			coverImage: '/site-assets/images/custom/living-room.jpeg',
+			gallery: [
+				'/site-assets/images/custom/living-room.jpeg',
+				'/site-assets/images/custom/hero-main.jpeg',
+				'/site-assets/images/custom/kitchen-tv.jpeg'
+			],
+			guests: 4,
+			beds: 2,
+			baths: 1,
+			size: 48,
+			pricePerNight: 72,
+			cleaningFee: 16,
+			rating: 4.88,
+			reviewCount: 86,
+			featured: true,
+			locationNote: 'Uz kej, 10 minuta od centra',
+			amenities: ['Self check-in', 'Parking', 'Fast Wi-Fi', 'Kitchen', 'Washer', 'Balcony', 'Smart TV'],
+			rules: ['Check-in od 14:00', 'Dozvoljeni kucni ljubimci uz najavu', 'Zabave nisu dozvoljene']
+		},
+		{
+			id: 'apt-delta-family',
+			slug: 'delta-family-suite',
+			name: 'Delta Family Suite',
+			teaser: 'Veliki apartman za porodice i manje grupe sa tri odvojena kreveta.',
+			description:
+				'Delta Family Suite je fleksibilan smestaj za duze gradske posete, sa tri kreveta, kuhinjom i privatnim parking mestom. Dobro radi za porodicne rezervacije i goste sa decom.',
+			coverImage: '/site-assets/images/custom/hero-main.jpeg',
+			gallery: [
+				'/site-assets/images/custom/hero-main.jpeg',
+				'/site-assets/images/custom/living-room.jpeg',
+				'/site-assets/images/custom/studio-vertical.jpeg'
+			],
+			guests: 5,
+			beds: 3,
+			baths: 2,
+			size: 64,
+			pricePerNight: 95,
+			cleaningFee: 18,
+			rating: 4.91,
+			reviewCount: 63,
+			featured: false,
+			locationNote: 'Blizu Delte, dobar pristup autoputu',
+			amenities: ['Self check-in', 'Parking', 'Fast Wi-Fi', 'Kitchen', 'Washer', 'Air conditioning', 'Breakfast option'],
+			rules: ['Check-in od 15:00', 'Nema pusenja', 'Tihi ulaz u zgradu']
+		}
+	],
+	reservations: [
+		{
+			id: 'res-1001',
+			apartmentId: 'apt-fortress-loft',
+			guestName: 'Mina Petrovic',
+			guestEmail: 'mina.petrovic@gmail.com',
+			guestPhone: '+381 64 222 111',
+			checkIn: '2026-03-27',
+			checkOut: '2026-03-30',
+			guests: 2,
+			totalPrice: 174,
+			source: 'direct',
+			status: 'confirmed',
+			notes: 'Kasni dolazak oko 22h.',
+			createdAt: now
+		},
+		{
+			id: 'res-1002',
+			apartmentId: 'apt-riverside-suite',
+			guestName: 'Luca Marino',
+			guestEmail: 'luca.marino@example.com',
+			guestPhone: '+39 333 111 222',
+			checkIn: '2026-03-29',
+			checkOut: '2026-04-02',
+			guests: 3,
+			totalPrice: 304,
+			source: 'booking.com',
+			status: 'confirmed',
+			notes: 'Booking.com guest, trazen parking.',
+			createdAt: now
+		},
+		{
+			id: 'res-1003',
+			apartmentId: 'apt-delta-family',
+			guestName: 'Nikola Jovic',
+			guestEmail: 'nikola.jovic@yahoo.com',
+			guestPhone: '+381 62 555 777',
+			checkIn: '2026-04-04',
+			checkOut: '2026-04-08',
+			guests: 4,
+			totalPrice: 398,
+			source: 'direct',
+			status: 'pending',
+			notes: 'Ceka potvrdu za raniji check-in.',
+			createdAt: now
+		}
+	],
+	calendarBlocks: [
+		{
+			id: 'block-2001',
+			apartmentId: 'apt-fortress-loft',
+			title: 'Dubinsko ciscenje',
+			start: '2026-04-01',
+			end: '2026-04-02',
+			type: 'cleaning',
+			notes: 'Generalno spremanje posle jaceg prometa.'
+		},
+		{
+			id: 'block-2002',
+			apartmentId: 'apt-riverside-suite',
+			title: 'Vlasnicka blokada',
+			start: '2026-04-10',
+			end: '2026-04-13',
+			type: 'owner-stay',
+			notes: 'Privatni boravak vlasnika.'
+		}
+	],
+	bookingSync: {
+		mode: 'ical',
+		state: 'needs-setup',
+		propertyId: 'nis-city-apartments',
+		docsUrl: 'https://developers.booking.com/',
+		notes:
+			'Podesi import URL za svaki apartman da bi se Booking.com rezervacije automatski povlacile. Export linkove iz ove aplikacije mozes uneti u Booking.com kalendar ako nalog podrzava iCal sync.',
+		lastSyncAt: null,
+		mappings: [
+			{
+				apartmentId: 'apt-fortress-loft',
+				roomName: 'Booking.com Fortress Loft',
+				importUrl: '',
+				exportPath: '/api/stay/ical/apt-fortress-loft'
+			},
+			{
+				apartmentId: 'apt-riverside-suite',
+				roomName: 'Booking.com Riverside Suite',
+				importUrl: '',
+				exportPath: '/api/stay/ical/apt-riverside-suite'
+			},
+			{
+				apartmentId: 'apt-delta-family',
+				roomName: 'Booking.com Delta Family Suite',
+				importUrl: '',
+				exportPath: '/api/stay/ical/apt-delta-family'
+			}
+		],
+		logs: [
+			{
+				id: 'sync-1',
+				status: 'warning',
+				message: 'Booking.com import URL jos nije dodat ni za jedan apartman.',
+				createdAt: now
+			}
+		]
+	}
+};
