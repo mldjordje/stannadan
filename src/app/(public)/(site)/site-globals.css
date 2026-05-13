@@ -1,9 +1,78 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap");
 @import url("../../../../public/site-assets/css/bootstrap.min.css");
 @import url("../../../../public/site-assets/css/phosphor-icons-bold.css");
 @import url("../../../../public/site-assets/css/phosphor-icons-fill.css");
 @import url("../../../../public/site-assets/css/phosphor-icons-regular.css");
 @import url("../../../../public/site-assets/css/main.css");
 @import url("../../../../public/site-assets/css/extra.css");
+
+/* ── Stan na Dan Premium Design System ── */
+:root {
+	--snd-bg: #0a0e1a;
+	--snd-bg-2: #0e1424;
+	--snd-bg-3: #141b2e;
+	--snd-gold: #c9a84c;
+	--snd-gold-2: #e5c875;
+	--snd-cream: #f4efe6;
+	--snd-cream-2: #e9e1d2;
+	--snd-muted: rgba(244, 239, 230, 0.55);
+	--snd-muted-2: rgba(244, 239, 230, 0.35);
+	--snd-line: rgba(201, 168, 76, 0.18);
+	--snd-line-soft: rgba(244, 239, 230, 0.08);
+	--snd-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.6), 0 10px 30px -10px rgba(201, 168, 76, 0.08);
+	--snd-serif: 'Cormorant Garamond', 'Times New Roman', serif;
+	--snd-mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+@keyframes snd-pulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.3; }
+}
+@keyframes snd-ticker {
+	to { transform: translateX(-50%); }
+}
+@keyframes snd-slide-line {
+	0% { transform: translateX(-100%); }
+	100% { transform: translateX(200%); }
+}
+
+.snd-ghost-btn {
+	position: relative;
+	overflow: hidden;
+	transition: color 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) !important;
+}
+.snd-ghost-btn::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: var(--snd-gold);
+	transform: translateY(100%);
+	transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+	z-index: 0;
+}
+.snd-ghost-btn:hover::before { transform: translateY(0); }
+.snd-ghost-btn:hover { color: var(--snd-bg) !important; }
+.snd-ghost-btn > * { position: relative; z-index: 1; }
+
+.snd-ghost-btn-light {
+	position: relative;
+	overflow: hidden;
+	transition: color 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) !important;
+}
+.snd-ghost-btn-light::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: var(--snd-bg);
+	transform: translateY(100%);
+	transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+	z-index: 0;
+}
+.snd-ghost-btn-light:hover::before { transform: translateY(0); }
+.snd-ghost-btn-light:hover { color: var(--snd-cream) !important; }
+.snd-ghost-btn-light > * { position: relative; z-index: 1; }
+
+.snd-page { background: var(--snd-bg); color: var(--snd-cream); }
 
 .site-app {
 	background: linear-gradient(180deg, #0d1724 0%, #16263b 45%, #081019 100%);

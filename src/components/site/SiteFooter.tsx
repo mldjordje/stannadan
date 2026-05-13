@@ -1,88 +1,249 @@
 import Link from 'next/link';
-import { PropertyProfile } from '@/lib/stay/types';
+import type { PropertyProfile } from '@/lib/stay/types';
+import SiteLogo from '@/components/site/SiteLogo';
 
 type SiteFooterProps = {
 	property: PropertyProfile;
 };
 
-function SiteFooter({ property }: SiteFooterProps) {
+export default function SiteFooter({ property }: SiteFooterProps) {
 	return (
-		<footer className="footer position-relative overflow-hidden site-footer">
-			<div className="container">
-				<div className="row gy-5 tw-pt-18 tw-pb-10">
-					<div className="col-lg-5">
-						<p className="text-uppercase text-main-600 tw-text-sm fw-semibold mb-3">Stan na dan Nis</p>
-						<h2 className="cursor-text tw-text-12 fw-normal text-white tw-mb-5">
-							Brzo upravljanje rezervacijama i moderan boravak u centru grada.
-						</h2>
-						<p className="text-white-50 tw-text-lg mb-0">{property.description}</p>
+		<footer
+			style={{
+				background: 'var(--snd-bg)',
+				borderTop: '1px solid var(--snd-line-soft)',
+				padding: 'clamp(60px, 8vw, 100px) clamp(20px, 5vw, 80px) 40px',
+				fontFamily: 'var(--snd-serif)',
+			}}
+		>
+			<div
+				style={{
+					display: 'grid',
+					gridTemplateColumns: '1.4fr 1fr 1fr 1fr',
+					gap: 'clamp(32px, 4vw, 60px)',
+					paddingBottom: 'clamp(40px, 5vw, 60px)',
+				}}
+				className="snd-footer-grid"
+			>
+				{/* Brand column */}
+				<div style={{ display: 'grid', gap: 24, maxWidth: 360 }}>
+					<div>
+						<SiteLogo variant="full" scheme="dark" width={220} />
 					</div>
-					<div className="col-md-4 col-lg-3">
-						<h4 className="tw-text-505 fw-normal text-white tw-mb-6">Kontakt</h4>
-						<ul className="d-flex flex-column tw-gap-4">
-							<li>
-								<Link href={`tel:${property.phone}`} className="text-white hover-text-main-600">
-									{property.phone}
-								</Link>
-							</li>
-							<li>
-								<Link href={`mailto:${property.email}`} className="text-white hover-text-main-600">
-									{property.email}
-								</Link>
-							</li>
-							<li>
-								<Link href={property.googleMapsUrl} className="text-white hover-text-main-600" target="_blank">
-									{property.address}
-								</Link>
-							</li>
-						</ul>
-					</div>
-					<div className="col-md-4 col-lg-2">
-						<h4 className="tw-text-505 fw-normal text-white tw-mb-6">Navigacija</h4>
-						<ul className="d-flex flex-column tw-gap-4">
-							<li>
-								<Link href="/apartments" className="text-white hover-text-main-600">
-									Apartmani
-								</Link>
-							</li>
-							<li>
-								<Link href="/availability" className="text-white hover-text-main-600">
-									Dostupnost
-								</Link>
-							</li>
-							<li>
-								<Link href="/account" className="text-white hover-text-main-600">
-									Moj nalog
-								</Link>
-							</li>
-							<li>
-								<Link href="/admin" className="text-white hover-text-main-600">
-									Admin
-								</Link>
-							</li>
-						</ul>
-					</div>
-					<div className="col-md-4 col-lg-2">
-						<h4 className="tw-text-505 fw-normal text-white tw-mb-6">U blizini</h4>
-						<ul className="d-flex flex-column tw-gap-4">
-							{property.neighborhood.map((item) => (
-								<li key={item.label} className="text-white-50">
-									<span className="d-block text-white">{item.label}</span>
-									<span>{item.distance}</span>
-								</li>
-							))}
-						</ul>
+					<p
+						style={{
+							color: 'var(--snd-muted)',
+							fontSize: 14,
+							lineHeight: 1.7,
+							margin: 0,
+						}}
+					>
+						A boutique collection of considered apartments — beginning with Niš, soon
+						opening in Belgrade and Novi Sad.
+					</p>
+					<div style={{ display: 'flex', gap: 12 }}>
+						{[
+							{ label: 'Instagram', href: '#' },
+							{ label: 'WhatsApp', href: `https://wa.me/${property.phone.replace(/\s/g, '')}` },
+						].map((s) => (
+							<a
+								key={s.label}
+								href={s.href}
+								style={{
+									fontFamily: 'var(--snd-mono)',
+									fontSize: 9,
+									letterSpacing: '0.22em',
+									color: 'var(--snd-muted-2)',
+									textTransform: 'uppercase',
+									textDecoration: 'none',
+									padding: '7px 12px',
+									border: '1px solid var(--snd-line-soft)',
+									borderRadius: 4,
+									transition: 'color 0.3s ease, border-color 0.3s ease',
+								}}
+							>
+								{s.label}
+							</a>
+						))}
 					</div>
 				</div>
-				<div className="border-top border-white border-opacity-10 py-4 d-flex justify-content-between gap-3 flex-wrap">
-					<p className="mb-0 text-white-50">Direktne rezervacije, Booking.com sync i Google prijava u jednoj Next.js aplikaciji.</p>
-					<Link href="/sign-in" className="text-main-600">
-						Prijava i nalog
-					</Link>
+
+				{/* Apartment */}
+				<div>
+					<h5
+						style={{
+							fontFamily: 'var(--snd-mono)',
+							fontSize: 10,
+							letterSpacing: '0.28em',
+							color: 'var(--snd-gold)',
+							textTransform: 'uppercase',
+							marginBottom: 24,
+						}}
+					>
+						The Apartment
+					</h5>
+					<ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 14 }}>
+						{[
+							{ href: '#space', label: 'The Space' },
+							{ href: '#gallery', label: 'Gallery' },
+							{ href: '#booking', label: 'Reserve' },
+							{ href: '#guestbook', label: 'Guestbook' },
+							{ href: '/apartments', label: 'All Apartments' },
+						].map((item) => (
+							<li key={item.href}>
+								<a
+									href={item.href}
+									style={{
+										fontFamily: 'var(--snd-serif)',
+										fontSize: 18,
+										color: 'var(--snd-cream-2)',
+										textDecoration: 'none',
+										transition: 'color 0.3s ease',
+									}}
+								>
+									{item.label}
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+
+				{/* Visiting */}
+				<div>
+					<h5
+						style={{
+							fontFamily: 'var(--snd-mono)',
+							fontSize: 10,
+							letterSpacing: '0.28em',
+							color: 'var(--snd-gold)',
+							textTransform: 'uppercase',
+							marginBottom: 24,
+						}}
+					>
+						Visiting
+					</h5>
+					<ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 14 }}>
+						{[
+							{ href: '#nis', label: 'About Niš' },
+							{ href: '/availability', label: 'Availability' },
+							{ href: '/contact', label: 'Contact us' },
+							{ href: '#', label: 'House manual' },
+							{ href: '#', label: 'Press kit' },
+						].map((item) => (
+							<li key={item.label}>
+								<a
+									href={item.href}
+									style={{
+										fontFamily: 'var(--snd-serif)',
+										fontSize: 18,
+										color: 'var(--snd-cream-2)',
+										textDecoration: 'none',
+										transition: 'color 0.3s ease',
+									}}
+								>
+									{item.label}
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+
+				{/* Contact */}
+				<div>
+					<h5
+						style={{
+							fontFamily: 'var(--snd-mono)',
+							fontSize: 10,
+							letterSpacing: '0.28em',
+							color: 'var(--snd-gold)',
+							textTransform: 'uppercase',
+							marginBottom: 24,
+						}}
+					>
+						Contact
+					</h5>
+					<ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 14 }}>
+						{[
+							{ label: property.email, href: `mailto:${property.email}` },
+							{ label: property.phone, href: `tel:${property.phone}` },
+							{ label: 'Instagram · @stannadan', href: '#' },
+							{ label: 'WhatsApp concierge', href: '#' },
+						].map((item) => (
+							<li key={item.label}>
+								<a
+									href={item.href}
+									style={{
+										fontFamily: 'var(--snd-serif)',
+										fontSize: 17,
+										color: 'var(--snd-cream-2)',
+										textDecoration: 'none',
+										transition: 'color 0.3s ease',
+									}}
+								>
+									{item.label}
+								</a>
+							</li>
+						))}
+					</ul>
 				</div>
 			</div>
+
+			{/* Bottom bar */}
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'space-between',
+					alignItems: 'center',
+					paddingTop: 32,
+					borderTop: '1px solid var(--snd-line-soft)',
+					flexWrap: 'wrap',
+					gap: 12,
+				}}
+			>
+				<span
+					style={{
+						fontFamily: 'var(--snd-mono)',
+						fontSize: 10,
+						letterSpacing: '0.24em',
+						color: 'var(--snd-muted-2)',
+						textTransform: 'uppercase',
+					}}
+				>
+					© 2026 Stan na Dan · Niš
+				</span>
+				<span
+					style={{
+						fontFamily: 'var(--snd-serif)',
+						fontStyle: 'italic',
+						fontSize: 14,
+						color: 'var(--snd-muted)',
+					}}
+				>
+					Composed with care by the hosts.
+				</span>
+				<Link
+					href="/sign-in"
+					style={{
+						fontFamily: 'var(--snd-mono)',
+						fontSize: 10,
+						letterSpacing: '0.22em',
+						color: 'var(--snd-muted-2)',
+						textDecoration: 'none',
+						textTransform: 'uppercase',
+					}}
+				>
+					Admin sign-in
+				</Link>
+			</div>
+
+			<style>{`
+				@media (max-width: 900px) {
+					.snd-footer-grid { grid-template-columns: 1fr 1fr !important; }
+				}
+				@media (max-width: 560px) {
+					.snd-footer-grid { grid-template-columns: 1fr !important; }
+				}
+			`}</style>
 		</footer>
 	);
 }
-
-export default SiteFooter;
