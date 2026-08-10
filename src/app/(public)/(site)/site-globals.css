@@ -43,6 +43,27 @@
 	color: #fff;
 }
 
+.site-skip-link {
+	position: fixed;
+	top: max(0.75rem, var(--site-safe-top));
+	left: max(0.75rem, var(--site-safe-left));
+	z-index: 10000;
+	padding: 0.75rem 1rem;
+	background: var(--site-bone);
+	color: var(--site-ink) !important;
+	font-size: 0.8rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-decoration: none;
+	text-transform: uppercase;
+	transform: translateY(calc(-100% - 2rem));
+}
+
+.site-skip-link:focus-visible {
+	outline-color: var(--site-cobalt) !important;
+	transform: translateY(0);
+}
+
 .site-app :where(h1, h2, h3, h4, p, figure) {
 	margin-block-start: 0;
 }
@@ -115,6 +136,85 @@
 
 .site-app main {
 	min-width: 0;
+}
+
+.site-app main:focus {
+	outline: none;
+}
+
+.site-route-loading,
+.site-not-found {
+	display: grid;
+	min-height: 100vh;
+	min-height: 100svh;
+	place-items: center;
+	padding: clamp(7rem, 14vw, 11rem) var(--site-gutter);
+	text-align: center;
+}
+
+.site-route-loading__inner,
+.site-not-found__inner {
+	width: min(100%, 46rem);
+}
+
+.site-route-loading__line {
+	width: min(18rem, 70vw);
+	height: 1px;
+	margin: 1.5rem auto 0;
+	background: var(--site-line);
+	overflow: hidden;
+}
+
+.site-route-loading__line::after {
+	display: block;
+	width: 42%;
+	height: 100%;
+	background: var(--site-cobalt);
+	content: '';
+	animation: site-route-loading 1.2s ease-in-out infinite;
+}
+
+.site-route-loading p,
+.site-not-found p {
+	margin: 0;
+	color: var(--site-smoke);
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.site-not-found h1 {
+	margin: 1.5rem auto 2rem;
+	font-size: clamp(4rem, 12vw, 9rem);
+}
+
+.site-not-found__links {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 1rem 2rem;
+}
+
+.site-not-found__links a {
+	min-height: 44px;
+	padding-block: 0.7rem;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-decoration: none;
+	text-transform: uppercase;
+	border-bottom: 1px solid var(--site-cobalt);
+}
+
+@keyframes site-route-loading {
+	0% {
+		transform: translateX(-110%);
+	}
+
+	100% {
+		transform: translateX(340%);
+	}
 }
 
 .site-app .site-safe-inline {

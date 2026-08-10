@@ -1,4 +1,4 @@
-import { Box, Button, lighten, Typography } from '@mui/material';
+import Button from '@mui/material/Button';
 import { signIn } from 'next-auth/react';
 import { authJsProviderMap } from '@auth/authJs';
 
@@ -18,49 +18,28 @@ function AuthJsProviderSelect() {
 	}
 
 	return (
-		<div className="w-full">
-			<div className="mb-8 flex items-center">
-				<div className="mt-px flex-auto border-t" />
-				<Typography
-					className="mx-2"
-					color="text.secondary"
-				>
-					Or continue with
-				</Typography>
-				<div className="mt-px flex-auto border-t" />
+		<div className="auth-provider-select">
+			<div className="auth-provider-divider">
+				<span>ili nastavite putem</span>
 			</div>
-			<div className="flex flex-col gap-3">
+			<div className="auth-provider-list">
 				{Object.values(authJsProviderMap)
 					.filter((provider) => provider.id !== 'credentials')
 					.map((provider) => (
 						<Button
 							key={provider.id}
-							className="items-between text-md flex"
+							className="auth-provider-button"
 							onClick={() => handleSignIn(provider.id)}
-							sx={(theme) => ({
-								backgroundColor: theme.palette.background.default,
-								color: theme.palette.text.primary,
-								'&:hover': {
-									color: provider?.style?.text || theme.palette.secondary.contrastText,
-									backgroundColor: provider?.style?.bg || theme.palette.secondary.main,
-									'& .provider-icon': {
-										backgroundColor: provider?.style?.bg
-											? lighten(provider?.style?.bg, 0.7)
-											: theme.palette.secondary.light
-									}
-								}
-							})}
 							endIcon={
-								<Box className="provider-icon flex h-6 w-6 items-center justify-center rounded-full">
+								<span className="auth-provider-icon">
 									<img
-										className="flex h-auto w-4"
 										src={`${providerLogoPath}/${provider.id}.svg`}
-										alt={provider.name}
+										alt=""
 									/>
-								</Box>
+								</span>
 							}
 						>
-							<span className="flex flex-1">Sign in with {provider.name}</span>
+							<span>Prijava preko {provider.name}</span>
 						</Button>
 					))}
 			</div>

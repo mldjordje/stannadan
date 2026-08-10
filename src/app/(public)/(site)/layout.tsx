@@ -20,12 +20,23 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
 
 	return (
 		<MotionProvider className={`${instrumentSerif.variable} site-app`}>
+			<a
+				className="site-skip-link"
+				href="#main-content"
+			>
+				Preskoči na sadržaj
+			</a>
 			<CinematicHeader
 				property={data.property}
 				userName={session?.db?.displayName || session?.user?.name}
 				roles={roles as UserRole[]}
 			/>
-			<main id="main-content">{children}</main>
+			<main
+				id="main-content"
+				tabIndex={-1}
+			>
+				{children}
+			</main>
 			<SiteFooter
 				property={data.property}
 				apartments={data.apartments.map(({ id, slug, name }) => ({
