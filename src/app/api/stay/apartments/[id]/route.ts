@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { apartmentSchema } from '@/lib/stay/schema';
 import { readStayData, updateStayData } from '@/lib/stay/store';
 import { requireAdmin } from '@/lib/auth/requireAdmin';
+import { deleteManagedBlobUrls } from '@/lib/stay/blob';
 
 type Context = {
 	params: Promise<{
@@ -23,6 +24,7 @@ export async function GET(_: Request, context: Context) {
 
 export async function PATCH(request: Request, context: Context) {
 	const unauthorized = await requireAdmin();
+
 	if (unauthorized) return unauthorized;
 
 	const { id } = await context.params;
@@ -33,13 +35,15 @@ export async function PATCH(request: Request, context: Context) {
 	}
 
 	let updatedApartment = null;
+	let previousImages: string[] = [];
 
-	await updateStayData((data) => {
+	const nextData = await updateStayData((data) => {
 		const apartments = data.apartments.map((apartment) => {
 			if (apartment.id !== id) {
 				return apartment;
 			}
 
+			previousImages = [apartment.coverImage, ...apartment.gallery];
 			updatedApartment = {
 				...apartment,
 				...payload.data
@@ -69,17 +73,32 @@ export async function PATCH(request: Request, context: Context) {
 		return NextResponse.json({ error: 'Apartment not found.' }, { status: 404 });
 	}
 
+	const retainedImages = new Set(
+		nextData.apartments.flatMap((apartment) => [apartment.coverImage, ...apartment.gallery])
+	);
+	const removedImages = previousImages.filter((image) => !retainedImages.has(image));
+
+	try {
+		await deleteManagedBlobUrls(removedImages);
+	} catch (error) {
+		console.error('Apartment images could not be removed from Blob storage.', error);
+	}
+
 	return NextResponse.json(updatedApartment);
 }
 
 export async function DELETE(_: Request, context: Context) {
 	const unauthorized = await requireAdmin();
+
 	if (unauthorized) return unauthorized;
 
 	const { id } = await context.params;
 	let removed = false;
+	let removedImages: string[] = [];
 
-	await updateStayData((data) => {
+	const nextData = await updateStayData((data) => {
+		const apartment = data.apartments.find((item) => item.id === id);
+		removedImages = apartment ? [apartment.coverImage, ...apartment.gallery] : [];
 		const nextApartments = data.apartments.filter((item) => item.id !== id);
 		removed = nextApartments.length !== data.apartments.length;
 
@@ -97,6 +116,16 @@ export async function DELETE(_: Request, context: Context) {
 
 	if (!removed) {
 		return NextResponse.json({ error: 'Apartment not found.' }, { status: 404 });
+	}
+
+	const retainedImages = new Set(
+		nextData.apartments.flatMap((apartment) => [apartment.coverImage, ...apartment.gallery])
+	);
+
+	try {
+		await deleteManagedBlobUrls(removedImages.filter((image) => !retainedImages.has(image)));
+	} catch (error) {
+		console.error('Apartment images could not be removed from Blob storage.', error);
 	}
 
 	return NextResponse.json({ success: true });
