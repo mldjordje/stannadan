@@ -1,4 +1,4 @@
-import { Marcellus } from 'next/font/google';
+import { Instrument_Serif } from 'next/font/google';
 import { auth } from '@auth/authJs';
 import SiteFooter from '@/components/site/SiteFooter';
 import SiteHeader from '@/components/site/SiteHeader';
@@ -6,10 +6,10 @@ import { readStayData } from '@/lib/stay/store';
 import { UserRole } from '@/lib/stay/types';
 import './site-globals.css';
 
-const marcellus = Marcellus({
+const instrumentSerif = Instrument_Serif({
 	subsets: ['latin'],
 	weight: '400',
-	variable: '--font-marcellus',
+	variable: '--font-instrument',
 	display: 'swap'
 });
 
@@ -18,9 +18,13 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
 	const roles = Array.isArray(session?.db?.role) ? session.db.role : session?.db?.role ? [session.db.role] : [];
 
 	return (
-		<div className={`${marcellus.variable} site-app`}>
-			<SiteHeader property={data.property} userName={session?.db?.displayName || session?.user?.name} roles={roles as UserRole[]} />
-			<main>{children}</main>
+		<div className={`${instrumentSerif.variable} site-app`}>
+			<SiteHeader
+				property={data.property}
+				userName={session?.db?.displayName || session?.user?.name}
+				roles={roles as UserRole[]}
+			/>
+			<main id="main-content">{children}</main>
 			<SiteFooter property={data.property} />
 		</div>
 	);

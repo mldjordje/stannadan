@@ -1,93 +1,145 @@
-@import url("../../../../public/site-assets/css/bootstrap.min.css");
-@import url("../../../../public/site-assets/css/phosphor-icons-bold.css");
-@import url("../../../../public/site-assets/css/phosphor-icons-fill.css");
-@import url("../../../../public/site-assets/css/phosphor-icons-regular.css");
-@import url("../../../../public/site-assets/css/main.css");
-@import url("../../../../public/site-assets/css/extra.css");
-
 .site-app {
-	background: linear-gradient(180deg, #0d1724 0%, #16263b 45%, #081019 100%);
+	--site-ink: #090b0d;
+	--site-bone: #f1ede4;
+	--site-smoke: #9ca0a5;
+	--site-cobalt: #315cff;
+	--site-amber: #d8a15b;
+	--site-line: rgb(241 237 228 / 18%);
+	--site-gutter: clamp(1rem, 4vw, 5rem);
+	--site-section: clamp(5rem, 12vw, 12rem);
+	--site-radius-small: 0.35rem;
+	--site-font-display: var(--font-instrument), Georgia, serif;
+	--site-font-ui: Geist, Arial, sans-serif;
+	--site-display-size: clamp(3.25rem, 10vw, 9rem);
+	--site-safe-top: env(safe-area-inset-top, 0px);
+	--site-safe-right: env(safe-area-inset-right, 0px);
+	--site-safe-bottom: env(safe-area-inset-bottom, 0px);
+	--site-safe-left: env(safe-area-inset-left, 0px);
+
+	min-height: 100vh;
+	min-height: 100svh;
+	background: var(--site-ink);
+	color: var(--site-bone);
+	color-scheme: dark;
+	font-family: var(--site-font-ui);
+	font-size: 1rem;
+	font-synthesis: none;
+	line-height: 1.6;
+	overflow-wrap: break-word;
+	isolation: isolate;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+}
+
+.site-app,
+.site-app *,
+.site-app *::before,
+.site-app *::after {
+	box-sizing: border-box;
+}
+
+.site-app ::selection {
+	background: var(--site-cobalt);
 	color: #fff;
 }
 
-.site-page-hero {
-	padding: 180px 0 90px;
+.site-app :where(h1, h2, h3, h4, p, figure) {
+	margin-block-start: 0;
 }
 
-.site-footer {
-	background: #081019;
+.site-app :where(h1, h2, h3) {
+	color: var(--site-bone);
+	font-family: var(--site-font-display);
+	font-weight: 400;
+	letter-spacing: -0.035em;
+	line-height: 0.96;
+	text-wrap: balance;
 }
 
-.site-surface {
-	background: rgba(8, 16, 25, 0.72);
-	border: 1px solid rgba(255, 255, 255, 0.08);
-	border-radius: 24px;
-	backdrop-filter: blur(12px);
+.site-app h1 {
+	font-size: var(--site-display-size);
 }
 
-.site-card {
-	background: rgba(8, 16, 25, 0.72);
-	border: 1px solid rgba(255, 255, 255, 0.08);
-	border-radius: 24px;
-	padding: 20px;
+.site-app :where(p, li) {
+	max-width: 70ch;
 }
 
-.site-card-image {
-	height: 280px;
-	object-fit: cover;
+.site-app :where(a) {
+	color: inherit;
+	text-decoration-color: var(--site-cobalt);
+	text-decoration-thickness: 0.08em;
+	text-underline-offset: 0.2em;
 }
 
-.site-card-badge {
-	position: absolute;
-	right: 16px;
-	bottom: 16px;
-	background: rgba(12, 19, 30, 0.84);
-	border-radius: 999px;
-	padding: 10px 16px;
-	color: #fff;
-	font-size: 15px;
+.site-app :where(button, input, textarea, select) {
+	border-radius: var(--site-radius-small);
+	color: inherit;
+	font: inherit;
 }
 
-.site-input {
-	width: 100%;
-	border-radius: 16px;
-	border: 1px solid rgba(255, 255, 255, 0.14);
-	background: rgba(255, 255, 255, 0.06);
-	padding: 14px 18px;
-	color: #fff;
+.site-app :where(button) {
+	border: 1px solid var(--site-line);
+	background: transparent;
+	cursor: pointer;
 }
 
-.site-input::placeholder {
-	color: rgba(255, 255, 255, 0.5);
+.site-app :where(input, textarea, select) {
+	border: 1px solid var(--site-line);
+	background: var(--site-ink);
+	caret-color: var(--site-cobalt);
 }
 
-.site-textarea {
-	min-height: 140px;
-	resize: vertical;
+.site-app :where(input, textarea)::placeholder {
+	color: var(--site-smoke);
+	opacity: 1;
 }
 
-.site-stat {
-	border-radius: 24px;
-	border: 1px solid rgba(255, 255, 255, 0.08);
-	background: rgba(255, 255, 255, 0.04);
-	padding: 24px;
+.site-app :where(button, input, textarea, select):disabled {
+	cursor: not-allowed;
+	opacity: 0.55;
 }
 
-.site-mini-card {
-	border-radius: 18px;
-	border: 1px solid rgba(255, 255, 255, 0.08);
-	background: rgba(255, 255, 255, 0.04);
-	padding: 20px;
+.site-app :where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+	outline: 2px solid var(--site-cobalt);
+	outline-offset: 0.25rem;
 }
 
-.site-hero-overlay {
-	position: absolute;
-	inset: 0;
-	background: linear-gradient(90deg, rgba(5, 10, 17, 0.9) 0%, rgba(5, 10, 17, 0.55) 52%, rgba(5, 10, 17, 0.25) 100%);
+.site-app :where(img, picture, video, canvas, svg) {
+	display: block;
+	max-width: 100%;
 }
 
-.site-gallery-grid img {
-	border-radius: 20px;
-	height: 220px;
-	object-fit: cover;
+.site-app img {
+	height: auto;
+}
+
+.site-app main {
+	min-width: 0;
+}
+
+.site-app .site-safe-inline {
+	padding-right: max(var(--site-gutter), var(--site-safe-right));
+	padding-left: max(var(--site-gutter), var(--site-safe-left));
+}
+
+.site-app .site-safe-top {
+	padding-top: var(--site-safe-top);
+}
+
+.site-app .site-safe-bottom {
+	padding-bottom: var(--site-safe-bottom);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site-app {
+		scroll-behavior: auto;
+	}
+
+	.site-app *,
+	.site-app *::before,
+	.site-app *::after {
+		animation: none !important;
+		scroll-behavior: auto !important;
+		transition: none !important;
+	}
 }
