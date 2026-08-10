@@ -43,9 +43,13 @@ export const providers: Provider[] = [
 			 * Sign in
 			 */
 			if (formInput.formType === 'signin') {
-				if (formInput.password === '' || formInput.email !== 'admin@fusetheme.com') {
+				if (formInput.email !== 'admin' || formInput.password !== 'admin') {
 					return null;
 				}
+
+				return {
+					email: 'admin@fusetheme.com'
+				};
 			}
 
 			/**
@@ -60,9 +64,7 @@ export const providers: Provider[] = [
 			/**
 			 * Response Success with email
 			 */
-			return {
-				email: formInput?.email as string
-			};
+			return { email: formInput?.email as string };
 		}
 	}),
 	Google

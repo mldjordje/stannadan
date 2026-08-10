@@ -17,11 +17,8 @@ import signinErrors from './signinErrors';
  * Form Validation Schema
  */
 const schema = z.object({
-	email: z.string().email('You must enter a valid email').nonempty('You must enter an email'),
-	password: z
-		.string()
-		.min(4, 'Password is too short - must be at least 4 chars.')
-		.nonempty('Please enter your password.'),
+	email: z.string().nonempty('Unesi korisničko ime'),
+	password: z.string().min(4, 'Lozinka mora imati najmanje 4 karaktera').nonempty('Unesi lozinku'),
 	remember: z.boolean().optional()
 });
 
@@ -43,11 +40,11 @@ function AuthJsCredentialsSignInForm() {
 	const { isValid, dirtyFields, errors } = formState;
 
 	useEffect(() => {
-		setValue('email', 'admin@fusetheme.com', {
+		setValue('email', 'admin', {
 			shouldDirty: true,
 			shouldValidate: true
 		});
-		setValue('password', '5;4+0IOx:\\Dy', {
+		setValue('password', 'admin', {
 			shouldDirty: true,
 			shouldValidate: true
 		});
@@ -97,9 +94,9 @@ function AuthJsCredentialsSignInForm() {
 					<TextField
 						{...field}
 						className="mb-6"
-						label="Email"
+						label="Korisničko ime"
 						autoFocus
-						type="email"
+						type="text"
 						error={!!errors.email}
 						helperText={errors?.email?.message}
 						variant="outlined"
@@ -115,7 +112,7 @@ function AuthJsCredentialsSignInForm() {
 					<TextField
 						{...field}
 						className="mb-6"
-						label="Password"
+						label="Lozinka"
 						type="password"
 						error={!!errors.password}
 						helperText={errors?.password?.message}
@@ -132,7 +129,7 @@ function AuthJsCredentialsSignInForm() {
 					render={({ field }) => (
 						<FormControl>
 							<FormControlLabel
-								label="Remember me"
+								label="Zapamti me"
 								control={
 									<Checkbox
 										size="small"
@@ -148,19 +145,19 @@ function AuthJsCredentialsSignInForm() {
 					className="text-md font-medium"
 					to="/#"
 				>
-					Forgot password?
+					Zaboravljena lozinka?
 				</Link>
 			</div>
 			<Button
 				variant="contained"
 				color="secondary"
 				className="mt-4 w-full"
-				aria-label="Sign in"
+				aria-label="Prijavi se"
 				disabled={_.isEmpty(dirtyFields) || !isValid}
 				type="submit"
 				size="large"
 			>
-				Sign in
+				Prijavi se
 			</Button>
 		</form>
 	);
