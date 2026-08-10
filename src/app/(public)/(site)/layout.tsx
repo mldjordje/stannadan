@@ -2,6 +2,7 @@ import { Instrument_Serif } from 'next/font/google';
 import { auth } from '@auth/authJs';
 import SiteFooter from '@/components/site/SiteFooter';
 import SiteHeader from '@/components/site/SiteHeader';
+import { MotionProvider } from '@/components/site/motion/MotionProvider';
 import { readStayData } from '@/lib/stay/store';
 import { UserRole } from '@/lib/stay/types';
 import './site-globals.css';
@@ -18,7 +19,7 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
 	const roles = Array.isArray(session?.db?.role) ? session.db.role : session?.db?.role ? [session.db.role] : [];
 
 	return (
-		<div className={`${instrumentSerif.variable} site-app`}>
+		<MotionProvider className={`${instrumentSerif.variable} site-app`}>
 			<SiteHeader
 				property={data.property}
 				userName={session?.db?.displayName || session?.user?.name}
@@ -26,6 +27,6 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
 			/>
 			<main id="main-content">{children}</main>
 			<SiteFooter property={data.property} />
-		</div>
+		</MotionProvider>
 	);
 }
