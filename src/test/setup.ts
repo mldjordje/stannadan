@@ -1,60 +1,55 @@
-import "@testing-library/jest-dom/vitest";
-import { afterEach } from "vitest";
+import '@testing-library/jest-dom/vitest';
+import { afterEach } from 'vitest';
 
 let mediaQueryMatches = false;
 
 const createMediaQueryList = (media: string): MediaQueryList =>
-  ({
-    matches: mediaQueryMatches,
-    media,
-    onchange: null,
-    addListener: () => {},
-    removeListener: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    dispatchEvent: () => true,
-  }) as MediaQueryList;
+	({
+		matches: mediaQueryMatches,
+		media,
+		onchange: null,
+		addListener: () => {},
+		removeListener: () => {},
+		addEventListener: () => {},
+		removeEventListener: () => {},
+		dispatchEvent: () => true
+	}) as MediaQueryList;
 
 window.matchMedia = (media) => createMediaQueryList(media);
 
 class ResizeObserverStub {
-  constructor(_callback: ResizeObserverCallback) {}
+	observe() {}
 
-  observe() {}
+	unobserve() {}
 
-  unobserve() {}
-
-  disconnect() {}
+	disconnect() {}
 }
 
 class IntersectionObserverStub {
-  readonly root = null;
-  readonly rootMargin = "0px";
-  readonly thresholds = [0];
+	readonly root = null;
+	readonly rootMargin = '0px';
+	readonly thresholds = [0];
 
-  constructor(_callback: IntersectionObserverCallback) {}
+	disconnect() {}
 
-  disconnect() {}
+	observe() {}
 
-  observe() {}
+	takeRecords(): IntersectionObserverEntry[] {
+		return [];
+	}
 
-  takeRecords(): IntersectionObserverEntry[] {
-    return [];
-  }
-
-  unobserve() {}
+	unobserve() {}
 }
 
 globalThis.ResizeObserver = ResizeObserverStub as typeof ResizeObserver;
-globalThis.IntersectionObserver =
-  IntersectionObserverStub as typeof IntersectionObserver;
+globalThis.IntersectionObserver = IntersectionObserverStub as typeof IntersectionObserver;
 
 export function setMediaQuery(matches: boolean): MediaQueryList {
-  mediaQueryMatches = matches;
+	mediaQueryMatches = matches;
 
-  return window.matchMedia("");
+	return window.matchMedia('');
 }
 
 afterEach(() => {
-  mediaQueryMatches = false;
+	mediaQueryMatches = false;
 });
