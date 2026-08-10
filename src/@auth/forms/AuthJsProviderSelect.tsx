@@ -1,11 +1,34 @@
 import Button from '@mui/material/Button';
-import { signIn } from 'next-auth/react';
-import { authJsProviderMap } from '@auth/authJs';
+import Alert from '@mui/material/Alert';
+import { getProviders, signIn } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
 const providerLogoPath = 'https://authjs.dev/img/providers';
 
 function AuthJsProviderSelect() {
-	const socialProviders = authJsProviderMap.filter((provider) => provider.id !== 'credentials');
+	const [socialProviders, setSocialProviders] = useState<{ id: string; name: string }[] | null>(null);
+
+	useEffect(() => {
+		let active = true;
+
+		getProviders()
+			.then((availableProviders) => {
+				if (active) {
+					setSocialProviders(
+						Object.values(availableProviders ?? {})
+							.filter((provider) => provider.id === 'google')
+							.map(({ id, name }) => ({ id, name }))
+					);
+				}
+			})
+			.catch(() => {
+				if (active) setSocialProviders([]);
+			});
+
+		return () => {
+			active = false;
+		};
+	}, []);
 
 	function handleSignIn(providerId: string) {
 		try {
@@ -15,15 +38,16 @@ function AuthJsProviderSelect() {
 		}
 	}
 
+	if (socialProviders === null) {
+		return <p className="auth-provider-loading">Pripremamo Google prijavu…</p>;
+	}
+
 	if (socialProviders.length === 0) {
-		return null;
+		return <Alert severity="warning">Google prijava trenutno nije podešena. Pokušajte ponovo kasnije.</Alert>;
 	}
 
 	return (
 		<div className="auth-provider-select">
-			<div className="auth-provider-divider">
-				<span>ili nastavite putem</span>
-			</div>
 			<div className="auth-provider-list">
 				{socialProviders.map((provider) => (
 					<Button
@@ -39,7 +63,7 @@ function AuthJsProviderSelect() {
 							</span>
 						}
 					>
-						<span>Prijava preko {provider.name}</span>
+						<span>Nastavi preko {provider.name}</span>
 					</Button>
 				))}
 			</div>

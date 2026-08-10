@@ -56,12 +56,8 @@ function NavbarMobileLayout2(props: NavbarMobileLayout2Props) {
 			>
 				<Navigation layout="vertical" />
 
-				<div className="flex shrink-0 items-center justify-center py-12 opacity-10">
-					<img
-						className="w-full max-w-16"
-						src="/site-assets/images/logo/favicon.png"
-						alt="EliteStay"
-					/>
+				<div className="flex shrink-0 items-center justify-center py-12 text-xl font-semibold opacity-20">
+					Stan na dan
 				</div>
 			</StyledContent>
 

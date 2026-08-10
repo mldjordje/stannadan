@@ -26,10 +26,10 @@ import {
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/EditOutlined';
 import AddIcon from '@mui/icons-material/Add';
-import UploadIcon from '@mui/icons-material/CloudUploadOutlined';
 import { upload } from '@vercel/blob/client';
 import { Apartment } from '@/lib/stay/types';
 import { formatCurrency } from '@/lib/stay/format';
+import ApartmentMediaEditor from './ApartmentMediaEditor';
 
 type ApartmentsAdminViewProps = {
 	initialApartments: Apartment[];
@@ -42,7 +42,7 @@ type ApartmentFormState = {
 	teaser: string;
 	description: string;
 	coverImage: string;
-	gallery: string;
+	gallery: string[];
 	guests: string;
 	beds: string;
 	baths: string;
@@ -63,7 +63,7 @@ const emptyForm: ApartmentFormState = {
 	teaser: '',
 	description: '',
 	coverImage: '/site-assets/images/custom/hero-main.jpeg',
-	gallery: '/site-assets/images/custom/hero-main.jpeg, /site-assets/images/custom/living-room.jpeg',
+	gallery: ['/site-assets/images/custom/living-room.jpeg'],
 	guests: '2',
 	beds: '1',
 	baths: '1',
@@ -86,7 +86,7 @@ function toForm(apartment: Apartment): ApartmentFormState {
 		teaser: apartment.teaser,
 		description: apartment.description,
 		coverImage: apartment.coverImage,
-		gallery: apartment.gallery.join(', '),
+		gallery: apartment.gallery,
 		guests: `${apartment.guests}`,
 		beds: `${apartment.beds}`,
 		baths: `${apartment.baths}`,
@@ -109,7 +109,7 @@ function toPayload(form: ApartmentFormState) {
 		teaser: form.teaser,
 		description: form.description,
 		coverImage: form.coverImage,
-		gallery: form.gallery.split(',').map((item) => item.trim()).filter(Boolean),
+		gallery: form.gallery.length ? form.gallery : [form.coverImage].filter(Boolean),
 		guests: Number(form.guests),
 		beds: Number(form.beds),
 		baths: Number(form.baths),
@@ -120,8 +120,14 @@ function toPayload(form: ApartmentFormState) {
 		reviewCount: Number(form.reviewCount),
 		featured: form.featured,
 		locationNote: form.locationNote,
-		amenities: form.amenities.split(',').map((item) => item.trim()).filter(Boolean),
-		rules: form.rules.split(',').map((item) => item.trim()).filter(Boolean)
+		amenities: form.amenities
+			.split(',')
+			.map((item) => item.trim())
+			.filter(Boolean),
+		rules: form.rules
+			.split(',')
+			.map((item) => item.trim())
+			.filter(Boolean)
 	};
 }
 
@@ -129,7 +135,10 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 	const [apartments, setApartments] = useState(initialApartments);
 	const [open, setOpen] = useState(false);
 	const [form, setForm] = useState<ApartmentFormState>(emptyForm);
-	const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+	const [feedback, setFeedback] = useState<{
+		type: 'success' | 'error';
+		message: string;
+	} | null>(null);
 	const [saving, setSaving] = useState(false);
 	const [uploading, setUploading] = useState(false);
 
@@ -167,22 +176,6 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 		});
 	}
 
-	async function uploadCover(file?: File) {
-		if (!file) return;
-
-		setUploading(true);
-		setFeedback(null);
-
-		try {
-			const blob = await uploadFile(file);
-			updateField('coverImage', blob.url);
-		} catch (error) {
-			setFeedback({ type: 'error', message: (error as Error).message });
-		} finally {
-			setUploading(false);
-		}
-	}
-
 	async function uploadGallery(files: FileList | null) {
 		if (!files?.length) return;
 
@@ -191,8 +184,16 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 
 		try {
 			const blobs = await Promise.all(Array.from(files).map(uploadFile));
-			const current = form.gallery.split(',').map((item) => item.trim()).filter(Boolean);
-			updateField('gallery', [...current, ...blobs.map((blob) => blob.url)].join(', '));
+			const urls = blobs.map((blob) => blob.url);
+			setForm((current) => {
+				const nextCover = current.coverImage || urls[0] || '';
+
+				return {
+					...current,
+					coverImage: nextCover,
+					gallery: [...current.gallery, ...urls.filter((url) => url !== nextCover)]
+				};
+			});
 		} catch (error) {
 			setFeedback({ type: 'error', message: (error as Error).message });
 		} finally {
@@ -222,7 +223,10 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 			setApartments((current) =>
 				form.id ? current.map((item) => (item.id === apartment.id ? apartment : item)) : [...current, apartment]
 			);
-			setFeedback({ type: 'success', message: 'Podaci o apartmanu su sacuvani.' });
+			setFeedback({
+				type: 'success',
+				message: 'Podaci o apartmanu su sacuvani.'
+			});
 			setOpen(false);
 		} catch (error) {
 			setFeedback({ type: 'error', message: (error as Error).message });
@@ -238,7 +242,9 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 			return;
 		}
 
-		const response = await fetch(`/api/stay/apartments/${apartmentId}`, { method: 'DELETE' });
+		const response = await fetch(`/api/stay/apartments/${apartmentId}`, {
+			method: 'DELETE'
+		});
 
 		if (response.ok) {
 			setApartments((current) => current.filter((item) => item.id !== apartmentId));
@@ -250,15 +256,31 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 	}
 
 	return (
-		<Stack spacing={3} padding={3}>
-			<Stack direction={{ xs: 'column', md: 'row' }} justifyContent="space-between" spacing={2}>
+		<Stack
+			spacing={3}
+			padding={3}
+		>
+			<Stack
+				direction={{ xs: 'column', md: 'row' }}
+				justifyContent="space-between"
+				spacing={2}
+			>
 				<div>
-					<Typography variant="h4" fontWeight={700}>
+					<Typography
+						variant="h4"
+						fontWeight={700}
+					>
 						Apartmani
 					</Typography>
-					<Typography color="text.secondary">Dodavanje, izmena i pricing za sve jedinice u ponudi.</Typography>
+					<Typography color="text.secondary">
+						Dodavanje, izmena i pricing za sve jedinice u ponudi.
+					</Typography>
 				</div>
-				<Button variant="contained" startIcon={<AddIcon />} onClick={openCreate}>
+				<Button
+					variant="contained"
+					startIcon={<AddIcon />}
+					onClick={openCreate}
+				>
 					Dodaj apartman
 				</Button>
 			</Stack>
@@ -279,10 +301,16 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 					</TableHead>
 					<TableBody>
 						{apartments.map((apartment) => (
-							<TableRow key={apartment.id} hover>
+							<TableRow
+								key={apartment.id}
+								hover
+							>
 								<TableCell>
 									<Typography fontWeight={600}>{apartment.name}</Typography>
-									<Typography variant="body2" color="text.secondary">
+									<Typography
+										variant="body2"
+										color="text.secondary"
+									>
 										{apartment.slug}
 									</Typography>
 								</TableCell>
@@ -290,13 +318,19 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 								<TableCell>{apartment.guests} gosta</TableCell>
 								<TableCell>{formatCurrency(apartment.pricePerNight)}</TableCell>
 								<TableCell>
-									<Chip color={apartment.featured ? 'secondary' : 'default'} label={apartment.featured ? 'Da' : 'Ne'} />
+									<Chip
+										color={apartment.featured ? 'secondary' : 'default'}
+										label={apartment.featured ? 'Da' : 'Ne'}
+									/>
 								</TableCell>
 								<TableCell align="right">
 									<IconButton onClick={() => openEdit(apartment)}>
 										<EditIcon />
 									</IconButton>
-									<IconButton color="error" onClick={() => deleteApartment(apartment.id)}>
+									<IconButton
+										color="error"
+										onClick={() => deleteApartment(apartment.id)}
+									>
 										<DeleteIcon />
 									</IconButton>
 								</TableCell>
@@ -306,18 +340,42 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 				</Table>
 			</Paper>
 
-			<Dialog open={open} onClose={() => setOpen(false)} maxWidth="md" fullWidth>
+			<Dialog
+				open={open}
+				onClose={() => setOpen(false)}
+				maxWidth="md"
+				fullWidth
+			>
 				<DialogTitle>{form.id ? 'Izmeni apartman' : 'Dodaj apartman'}</DialogTitle>
 				<DialogContent>
-					<Grid container spacing={2} sx={{ mt: 0.5 }}>
+					<Grid
+						container
+						spacing={2}
+						sx={{ mt: 0.5 }}
+					>
 						<Grid size={{ xs: 12, md: 6 }}>
-							<TextField label="Naziv" value={form.name} onChange={(event) => updateField('name', event.target.value)} fullWidth />
+							<TextField
+								label="Naziv"
+								value={form.name}
+								onChange={(event) => updateField('name', event.target.value)}
+								fullWidth
+							/>
 						</Grid>
 						<Grid size={{ xs: 12, md: 6 }}>
-							<TextField label="Slug" value={form.slug} onChange={(event) => updateField('slug', event.target.value)} fullWidth />
+							<TextField
+								label="Slug"
+								value={form.slug}
+								onChange={(event) => updateField('slug', event.target.value)}
+								fullWidth
+							/>
 						</Grid>
 						<Grid size={12}>
-							<TextField label="Teaser" value={form.teaser} onChange={(event) => updateField('teaser', event.target.value)} fullWidth />
+							<TextField
+								label="Teaser"
+								value={form.teaser}
+								onChange={(event) => updateField('teaser', event.target.value)}
+								fullWidth
+							/>
 						</Grid>
 						<Grid size={12}>
 							<TextField
@@ -331,18 +389,6 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 						</Grid>
 						<Grid size={{ xs: 12, md: 6 }}>
 							<TextField
-								label="Cover image"
-								value={form.coverImage}
-								onChange={(event) => updateField('coverImage', event.target.value)}
-								fullWidth
-							/>
-							<Button component="label" startIcon={<UploadIcon />} disabled={uploading} sx={{ mt: 1 }}>
-								{uploading ? 'Upload...' : 'Upload cover slike'}
-								<input hidden type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={(event) => uploadCover(event.target.files?.[0])} />
-							</Button>
-						</Grid>
-						<Grid size={{ xs: 12, md: 6 }}>
-							<TextField
 								label="Lokacija"
 								value={form.locationNote}
 								onChange={(event) => updateField('locationNote', event.target.value)}
@@ -350,28 +396,49 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 							/>
 						</Grid>
 						<Grid size={12}>
+							<ApartmentMediaEditor
+								coverImage={form.coverImage}
+								gallery={form.gallery}
+								uploading={uploading}
+								onUpload={uploadGallery}
+								onChange={(value) => setForm((current) => ({ ...current, ...value }))}
+							/>
+						</Grid>
+						<Grid size={{ xs: 6, md: 3 }}>
 							<TextField
-								label="Galerija (zarezom odvojeni URL-ovi)"
-								value={form.gallery}
-								onChange={(event) => updateField('gallery', event.target.value)}
+								label="Gosti"
+								type="number"
+								value={form.guests}
+								onChange={(event) => updateField('guests', event.target.value)}
 								fullWidth
 							/>
-							<Button component="label" startIcon={<UploadIcon />} disabled={uploading} sx={{ mt: 1 }}>
-								Dodaj slike u galeriju
-								<input hidden multiple type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={(event) => uploadGallery(event.target.files)} />
-							</Button>
 						</Grid>
 						<Grid size={{ xs: 6, md: 3 }}>
-							<TextField label="Gosti" type="number" value={form.guests} onChange={(event) => updateField('guests', event.target.value)} fullWidth />
+							<TextField
+								label="Kreveti"
+								type="number"
+								value={form.beds}
+								onChange={(event) => updateField('beds', event.target.value)}
+								fullWidth
+							/>
 						</Grid>
 						<Grid size={{ xs: 6, md: 3 }}>
-							<TextField label="Kreveti" type="number" value={form.beds} onChange={(event) => updateField('beds', event.target.value)} fullWidth />
+							<TextField
+								label="Kupatila"
+								type="number"
+								value={form.baths}
+								onChange={(event) => updateField('baths', event.target.value)}
+								fullWidth
+							/>
 						</Grid>
 						<Grid size={{ xs: 6, md: 3 }}>
-							<TextField label="Kupatila" type="number" value={form.baths} onChange={(event) => updateField('baths', event.target.value)} fullWidth />
-						</Grid>
-						<Grid size={{ xs: 6, md: 3 }}>
-							<TextField label="m2" type="number" value={form.size} onChange={(event) => updateField('size', event.target.value)} fullWidth />
+							<TextField
+								label="m2"
+								type="number"
+								value={form.size}
+								onChange={(event) => updateField('size', event.target.value)}
+								fullWidth
+							/>
 						</Grid>
 						<Grid size={{ xs: 6, md: 3 }}>
 							<TextField
@@ -392,7 +459,13 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 							/>
 						</Grid>
 						<Grid size={{ xs: 6, md: 3 }}>
-							<TextField label="Rating" type="number" value={form.rating} onChange={(event) => updateField('rating', event.target.value)} fullWidth />
+							<TextField
+								label="Rating"
+								type="number"
+								value={form.rating}
+								onChange={(event) => updateField('rating', event.target.value)}
+								fullWidth
+							/>
 						</Grid>
 						<Grid size={{ xs: 6, md: 3 }}>
 							<TextField
@@ -412,11 +485,21 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 							/>
 						</Grid>
 						<Grid size={12}>
-							<TextField label="Pravila" value={form.rules} onChange={(event) => updateField('rules', event.target.value)} fullWidth />
+							<TextField
+								label="Pravila"
+								value={form.rules}
+								onChange={(event) => updateField('rules', event.target.value)}
+								fullWidth
+							/>
 						</Grid>
 						<Grid size={12}>
 							<FormControlLabel
-								control={<Switch checked={form.featured} onChange={(_, checked) => updateField('featured', checked)} />}
+								control={
+									<Switch
+										checked={form.featured}
+										onChange={(_, checked) => updateField('featured', checked)}
+									/>
+								}
 								label="Prikazi na landing page-u"
 							/>
 						</Grid>
@@ -424,7 +507,11 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={() => setOpen(false)}>Odustani</Button>
-					<Button onClick={saveApartment} variant="contained" disabled={saving}>
+					<Button
+						onClick={saveApartment}
+						variant="contained"
+						disabled={saving}
+					>
 						{saving ? 'Cuvanje...' : 'Sacuvaj'}
 					</Button>
 				</DialogActions>

@@ -1,34 +1,46 @@
 import Link from 'next/link';
+import PublicAvailabilityCalendar from '@/components/site/availability/PublicAvailabilityCalendar';
 import PublicInformationLayout from '@/components/site/shared/PublicInformationLayout';
 import { formatDateRange } from '@/lib/stay/format';
 import { readStayData } from '@/lib/stay/store';
-import type { ReservationStatus } from '@/lib/stay/types';
-
-const reservationStatusLabels: Record<Exclude<ReservationStatus, 'cancelled'>, string> = {
-	pending: 'Termin čeka potvrdu',
-	confirmed: 'Potvrđen termin',
-	'checked-in': 'Boravak je u toku',
-	'checked-out': 'Boravak je završen'
-};
 
 export default async function AvailabilityPage() {
 	const data = await readStayData();
 	const reservations = data.reservations
 		.filter((reservation) => reservation.status !== 'cancelled')
-		.sort((first, second) => new Date(first.checkIn).getTime() - new Date(second.checkIn).getTime());
+		.sort((first, second) => first.checkIn.localeCompare(second.checkIn));
+	const unavailableRanges = [
+		...reservations.map((reservation) => ({
+			id: reservation.id,
+			apartmentId: reservation.apartmentId,
+			start: reservation.checkIn,
+			end: reservation.checkOut
+		})),
+		...data.calendarBlocks.map((block) => ({
+			id: block.id,
+			apartmentId: block.apartmentId,
+			start: block.start,
+			end: block.end
+		}))
+	];
 
 	return (
 		<PublicInformationLayout
 			intro="Dostupnost"
 			heading="Mirniji put do pravog termina."
-			description="Prikazani zauzeti periodi služe kao orijentacija. Izaberite apartman i pošaljite upit — domaćin će potvrditi tačnu dostupnost."
+			description="Izaberite apartman i proverite slobodne dane. Domaćin potvrđuje tačnu dostupnost nakon slanja upita."
 		>
+			<PublicAvailabilityCalendar
+				apartments={data.apartments.map(({ id, name }) => ({ id, name }))}
+				unavailableRanges={unavailableRanges}
+			/>
+
 			<div data-public-section>
 				{data.apartments.map((apartment, index) => {
-					const apartmentReservations = reservations.filter(
-						(reservation) => reservation.apartmentId === apartment.id
-					);
-					const nextReservation = apartmentReservations[0];
+					const apartmentUnavailable = unavailableRanges
+						.filter((range) => range.apartmentId === apartment.id)
+						.sort((first, second) => first.start.localeCompare(second.start));
+					const nextUnavailable = apartmentUnavailable[0];
 
 					return (
 						<article
@@ -43,28 +55,23 @@ export default async function AvailabilityPage() {
 
 							<div>
 								<p data-public-copy>
-									{nextReservation
-										? `Prvi evidentirani zauzeti period: ${formatDateRange(nextReservation.checkIn, nextReservation.checkOut)}.`
+									{nextUnavailable
+										? `Prvi evidentirani zauzeti period: ${formatDateRange(nextUnavailable.start, nextUnavailable.end)}.`
 										: 'Za ovaj apartman trenutno nema evidentiranih zauzetih perioda.'}
 								</p>
 
-								{apartmentReservations.length > 0 ? (
+								{apartmentUnavailable.length ? (
 									<ul
 										data-public-list
 										aria-label={`Zauzeti periodi za ${apartment.name}`}
 									>
-										{apartmentReservations.slice(0, 3).map((reservation) => (
+										{apartmentUnavailable.slice(0, 3).map((range) => (
 											<li
-												key={reservation.id}
+												key={range.id}
 												data-public-row
 											>
 												<span data-public-label>Zauzeto</span>
-												<p data-public-value>
-													{formatDateRange(reservation.checkIn, reservation.checkOut)}
-													<span data-public-meta>
-														{reservationStatusLabels[reservation.status]}
-													</span>
-												</p>
+												<p data-public-value>{formatDateRange(range.start, range.end)}</p>
 											</li>
 										))}
 									</ul>

@@ -2,52 +2,15 @@ import NextAuth from 'next-auth';
 import UserModel from '@auth/user/models/UserModel';
 import type { NextAuthConfig } from 'next-auth';
 import type { Provider } from 'next-auth/providers';
-import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
+import { resolveDefaultRoles } from './access';
 
-const isProduction = process.env.NODE_ENV === 'production';
 const googleConfigured = Boolean(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET);
-const adminUsername = isProduction ? process.env.AUTH_ADMIN_USERNAME || 'admin' : 'admin';
-const adminPassword = isProduction ? process.env.AUTH_ADMIN_PASSWORD : 'admin';
-const adminEmails = (process.env.AUTH_ADMIN_EMAILS || '')
-	.split(',')
-	.map((item) => item.trim().toLowerCase())
-	.filter(Boolean);
-const credentialsAdminEmail = adminEmails[0] || 'admin@local.invalid';
 
-function resolveDefaultRoles(email?: string | null) {
-	const normalizedEmail = email?.toLowerCase() || '';
-
-	if (
-		adminEmails.includes(normalizedEmail) ||
-		(!isProduction && normalizedEmail === 'admin@local.invalid') ||
-		(Boolean(adminPassword) && normalizedEmail === credentialsAdminEmail)
-	) {
-		return ['admin'];
-	}
-
-	return ['customer'];
-}
-
-const adminCredentials = Credentials({
-	name: isProduction ? 'Admin login' : 'Development admin',
-	authorize(formInput) {
-		if (!adminPassword || formInput.email !== adminUsername || formInput.password !== adminPassword) {
-			return null;
-		}
-
-		return {
-			id: isProduction ? 'production-admin' : 'local-development-admin',
-			email: isProduction ? credentialsAdminEmail : 'admin@local.invalid',
-			name: isProduction ? 'Administrator' : 'Development admin'
-		};
-	}
-});
-
-export const providers: Provider[] = [adminCredentials, ...(googleConfigured ? [Google] : [])];
+export const providers: Provider[] = googleConfigured ? [Google] : [];
 
 const config = {
-	theme: { logo: '/site-assets/images/logo/logo-white.png' },
+	theme: {},
 	pages: {
 		signIn: '/sign-in'
 	},
@@ -99,29 +62,5 @@ const config = {
 	},
 	debug: process.env.NODE_ENV !== 'production'
 } satisfies NextAuthConfig;
-
-export type AuthJsProvider = {
-	id: string;
-	name: string;
-	style?: {
-		text?: string;
-		bg?: string;
-	};
-};
-
-export const authJsProviderMap: AuthJsProvider[] = providers
-	.map((provider) => {
-		const providerData = typeof provider === 'function' ? provider() : provider;
-
-		return {
-			id: providerData.id,
-			name: providerData.name,
-			style: {
-				text: (providerData as { style?: { text: string } }).style?.text,
-				bg: (providerData as { style?: { bg: string } }).style?.bg
-			}
-		};
-	})
-	.filter(Boolean);
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);

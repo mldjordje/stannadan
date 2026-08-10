@@ -38,9 +38,13 @@
 	text-decoration: none;
 }
 
-.logo img {
-	width: clamp(5.75rem, 8vw, 7rem);
-	height: auto;
+.brand {
+	color: var(--site-bone);
+	font-family: var(--site-font-display);
+	font-size: clamp(1.25rem, 2vw, 1.65rem);
+	font-weight: 500;
+	letter-spacing: -0.025em;
+	white-space: nowrap;
 }
 
 .logo span {

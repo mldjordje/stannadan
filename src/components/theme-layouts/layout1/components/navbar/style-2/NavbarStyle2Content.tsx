@@ -111,11 +111,11 @@ function NavbarStyle2Content(props: NavbarStyle2ContentProps) {
 					id="fuse-navbar-side-panel"
 					className="flex h-full shrink-0 flex-col items-center"
 				>
-					<img
-						className="my-4 w-6"
-						src="/site-assets/images/logo/favicon.png"
-						alt="EliteStay"
-					/>
+					<span className="my-4 text-center text-[10px] leading-tight font-semibold">
+						Stan
+						<br />
+						na dan
+					</span>
 
 					<FuseScrollbars
 						className="flex min-h-0 w-full flex-1 flex-col justify-start overflow-x-hidden overflow-y-auto"

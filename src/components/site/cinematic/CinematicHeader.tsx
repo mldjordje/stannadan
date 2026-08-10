@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -158,13 +157,7 @@ export function CinematicHeader({ property, userName, roles = [] }: CinematicHea
 					className={styles.logo}
 					aria-label={`${property.name}, početna`}
 				>
-					<Image
-						src="/site-assets/images/logo/logo-white.png"
-						alt=""
-						width={180}
-						height={54}
-						priority
-					/>
+					<strong className={styles.brand}>Stan na dan</strong>
 					<span>{property.city}</span>
 				</Link>
 

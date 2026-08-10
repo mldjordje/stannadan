@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
 function SignInPageTitle() {
@@ -9,13 +8,7 @@ function SignInPageTitle() {
 				className="auth-home-link"
 				aria-label="Stan na Dan Niš, početna"
 			>
-				<Image
-					src="/site-assets/images/logo/logo-black.png"
-					alt=""
-					width={180}
-					height={54}
-					priority
-				/>
+				<span>Stan na dan</span>
 			</Link>
 			<p className="auth-eyebrow">Moj nalog</p>
 			<h1>Dobro došli.</h1>

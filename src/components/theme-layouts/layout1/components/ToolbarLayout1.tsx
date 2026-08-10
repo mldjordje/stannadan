@@ -49,7 +49,7 @@ function ToolbarLayout1(props: ToolbarLayout1Props) {
 						<span className="text-sm font-semibold tracking-wide">Administracija</span>
 					</div>
 
-					<div className="px-3 text-sm font-semibold md:px-5">EliteStay</div>
+					<div className="px-3 text-sm font-semibold md:px-5">Stan na dan</div>
 
 					{config.navbar.display && config.navbar.position === 'right' && (
 						<>
