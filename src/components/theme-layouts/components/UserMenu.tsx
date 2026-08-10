@@ -26,7 +26,7 @@ type UserMenuProps = {
  */
 function UserMenu(props: UserMenuProps) {
 	const { className, popoverProps, arrowIcon = 'lucide:chevron-up', dense = false, onlyAvatar = false } = props;
-	const { data: user, signOut, isGuest } = useUser();
+	const { data: user, signOut } = useUser();
 	const [userMenu, setUserMenu] = useState<HTMLElement | null>(null);
 	const userMenuClick = (event: React.MouseEvent<HTMLElement>) => {
 		setUserMenu(event.currentTarget);
@@ -134,65 +134,27 @@ function UserMenu(props: UserMenuProps) {
 				}}
 				{...popoverProps}
 			>
-				{isGuest ? (
-					<>
-						<MenuItem
-							component={Link}
-							to="/sign-in"
-							role="button"
-						>
-							<ListItemIcon>
-								<FuseSvgIcon>lucide:lock</FuseSvgIcon>
-							</ListItemIcon>
-							<ListItemText primary="Sign In" />
-						</MenuItem>
-						<MenuItem
-							component={Link}
-							to="/sign-up"
-							role="button"
-						>
-							<ListItemIcon>
-								<FuseSvgIcon>lucide:user-plus</FuseSvgIcon>
-							</ListItemIcon>
-							<ListItemText primary="Sign up" />
-						</MenuItem>
-					</>
-				) : (
-					<>
-						<MenuItem
-							component={Link}
-							to="/apps/profile"
-							onClick={userMenuClose}
-							role="button"
-						>
-							<ListItemIcon>
-								<FuseSvgIcon>lucide:circle-user</FuseSvgIcon>
-							</ListItemIcon>
-							<ListItemText primary="My Profile" />
-						</MenuItem>
-						<MenuItem
-							component={Link}
-							to="/apps/mailbox"
-							onClick={userMenuClose}
-							role="button"
-						>
-							<ListItemIcon>
-								<FuseSvgIcon>lucide:mail</FuseSvgIcon>
-							</ListItemIcon>
-							<ListItemText primary="Inbox" />
-						</MenuItem>
-						<MenuItem
-							onClick={() => {
-								signOut();
-							}}
-						>
-							<ListItemIcon>
-								<FuseSvgIcon>lucide:square-arrow-right</FuseSvgIcon>
-							</ListItemIcon>
-							<ListItemText primary="Sign out" />
-						</MenuItem>
-					</>
-				)}
+				<MenuItem
+					component={Link}
+					to="/"
+					onClick={userMenuClose}
+					role="button"
+				>
+					<ListItemIcon>
+						<FuseSvgIcon>lucide:house</FuseSvgIcon>
+					</ListItemIcon>
+					<ListItemText primary="Otvori javni sajt" />
+				</MenuItem>
+				<MenuItem
+					onClick={() => {
+						signOut();
+					}}
+				>
+					<ListItemIcon>
+						<FuseSvgIcon>lucide:log-out</FuseSvgIcon>
+					</ListItemIcon>
+					<ListItemText primary="Odjavi se" />
+				</MenuItem>
 			</Popover>
 		</>
 	);

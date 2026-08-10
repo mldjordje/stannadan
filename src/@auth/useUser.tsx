@@ -8,13 +8,14 @@ import setIn from '@/utils/setIn';
 type useUser = {
 	data: User | null;
 	isGuest: boolean;
+	isLoading: boolean;
 	updateUser: (updates: Partial<User>) => Promise<User | undefined>;
 	updateUserSettings: (newSettings: User['settings']) => Promise<User['settings'] | undefined>;
 	signOut: () => Promise<void>;
 };
 
 function useUser(): useUser {
-	const { data, update } = useSession();
+	const { data, update, status } = useSession();
 	const user = useMemo(() => data?.db, [data]);
 	const isGuest = useMemo(() => !user?.role || user?.role?.length === 0, [user]);
 
@@ -65,6 +66,7 @@ function useUser(): useUser {
 	return {
 		data: user,
 		isGuest,
+		isLoading: status === 'loading',
 		signOut: handleSignOut,
 		updateUser: handleUpdateUser,
 		updateUserSettings: handleUpdateUserSettings

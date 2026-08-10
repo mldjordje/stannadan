@@ -1,12 +1,10 @@
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import { memo, ReactNode } from 'react';
-import Configurator from 'src/components/theme-layouts/components/configurator/Configurator';
 import useFuseLayoutSettings from '@fuse/core/FuseLayout/useFuseLayoutSettings';
 import FooterLayout3 from './components/FooterLayout3';
 import LeftSideLayout3 from './components/LeftSideLayout3';
 import NavbarWrapperLayout3 from './components/NavbarWrapperLayout3';
-import RightSideLayout3 from './components/RightSideLayout3';
 import ToolbarLayout3 from './components/ToolbarLayout3';
 import { Layout3ConfigDefaultsType } from './Layout3Config';
 
@@ -76,10 +74,6 @@ function Layout3(props: Layout3Props) {
 						/>
 					)}
 
-					<div className="sticky top-0 z-99">
-						<Configurator />
-					</div>
-
 					<div className="relative z-10 flex min-h-0 flex-auto flex-col">{children}</div>
 
 					{config.footer.display && (
@@ -87,8 +81,6 @@ function Layout3(props: Layout3Props) {
 					)}
 				</main>
 			</div>
-
-			{config.rightSidePanel.display && <RightSideLayout3 />}
 		</Root>
 	);
 }

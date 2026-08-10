@@ -20,7 +20,7 @@ type AuthGuardProps = {
 };
 
 function AuthGuardRedirect({ auth, children, loginRedirectUrl = '/' }: AuthGuardProps) {
-	const { data: user, isGuest } = useUser();
+	const { data: user, isGuest, isLoading } = useUser();
 	const userRole = user?.role;
 	const navigate = useNavigate();
 
@@ -41,6 +41,10 @@ function AuthGuardRedirect({ auth, children, loginRedirectUrl = '/' }: AuthGuard
 
 	// Check user's permissions and set access granted state
 	useEffect(() => {
+		if (isLoading) {
+			return;
+		}
+
 		const isOnlyGuestAllowed = Array.isArray(auth) && auth.length === 0;
 		const userHasPermission = FuseUtils.hasPermission(auth, userRole);
 		const ignoredPaths = ['/', '/callback', '/sign-in', '/sign-out', '/logout', '/404'];
@@ -67,7 +71,7 @@ function AuthGuardRedirect({ auth, children, loginRedirectUrl = '/' }: AuthGuard
 		}
 
 		handleRedirection();
-	}, [auth, userRole, isGuest, pathname, handleRedirection]);
+	}, [auth, userRole, isGuest, isLoading, pathname, handleRedirection]);
 
 	// Return children if access is granted, otherwise null
 	return accessGranted ? children : <FuseLoading />;

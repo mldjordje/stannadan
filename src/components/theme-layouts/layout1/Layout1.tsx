@@ -2,12 +2,10 @@
 import { styled } from '@mui/material/styles';
 import { memo, ReactNode } from 'react';
 import { Layout1ConfigDefaultsType } from 'src/components/theme-layouts/layout1/Layout1Config';
-import Configurator from 'src/components/theme-layouts/components/configurator/Configurator';
 import useFuseLayoutSettings from '@fuse/core/FuseLayout/useFuseLayoutSettings';
 import FooterLayout1 from './components/FooterLayout1';
 import LeftSideLayout1 from './components/LeftSideLayout1';
 import NavbarWrapperLayout1 from './components/NavbarWrapperLayout1';
-import RightSideLayout1 from './components/RightSideLayout1';
 import ToolbarLayout1 from './components/ToolbarLayout1';
 
 const Root = styled('div')(({ config }: { config: Layout1ConfigDefaultsType }) => ({
@@ -49,7 +47,7 @@ function Layout1(props: Layout1Props) {
 
 	return (
 		<Root
-			id="fuse-layout"
+			id="admin-layout"
 			config={config}
 			className="flex w-full flex-auto"
 		>
@@ -59,16 +57,12 @@ function Layout1(props: Layout1Props) {
 				{config.navbar.display && config.navbar.position === 'left' && <NavbarWrapperLayout1 />}
 
 				<main
-					id="fuse-main"
+					id="admin-main"
 					className="relative z-10 flex min-h-svh min-w-0 flex-auto flex-col"
 				>
 					{config.toolbar.display && (
 						<ToolbarLayout1 className={config.toolbar.style === 'fixed' ? 'sticky top-0' : ''} />
 					)}
-
-					<div className="sticky top-0 z-99">
-						<Configurator />
-					</div>
 
 					<div className="relative z-10 flex min-h-0 flex-auto flex-col">{children}</div>
 
@@ -79,8 +73,6 @@ function Layout1(props: Layout1Props) {
 
 				{config.navbar.display && config.navbar.position === 'right' && <NavbarWrapperLayout1 />}
 			</div>
-
-			{config.rightSidePanel.display && <RightSideLayout1 />}
 		</Root>
 	);
 }

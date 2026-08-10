@@ -40,6 +40,10 @@ function AuthJsCredentialsSignInForm() {
 	const { isValid, dirtyFields, errors } = formState;
 
 	useEffect(() => {
+		if (process.env.NODE_ENV === 'production') {
+			return;
+		}
+
 		setValue('email', 'admin', {
 			shouldDirty: true,
 			shouldValidate: true

@@ -6,7 +6,6 @@ import { Divider } from '@mui/material';
 import UserMenu from 'src/components/theme-layouts/components/UserMenu';
 import Navigation from '../../components/navigation/Navigation';
 import Logo from '../../components/Logo';
-import GoToDocBox from '../../components/GoToDocBox';
 
 const Root = styled('div')(({ theme }) => ({
 	backgroundColor: theme.vars.palette.background.default,
@@ -60,13 +59,11 @@ function NavbarMobileLayout3(props: NavbarMobileLayout3Props) {
 				<div className="flex shrink-0 items-center justify-center py-12 opacity-10">
 					<img
 						className="w-full max-w-16"
-						src="/assets/images/logo/logo.svg"
-						alt="footer logo"
+						src="/site-assets/images/logo/favicon.png"
+						alt="EliteStay"
 					/>
 				</div>
 			</StyledContent>
-
-			<GoToDocBox className="mx-3 my-4" />
 
 			<Divider />
 

@@ -5,12 +5,12 @@ function SignOutPageTitle() {
 		<div className="w-full">
 			<img
 				className="mx-auto w-12"
-				src="/assets/images/logo/logo.svg"
-				alt="logo"
+				src="/site-assets/images/logo/favicon.png"
+				alt="EliteStay"
 			/>
 
 			<Typography className="mt-8 text-center text-4xl leading-[1.25] font-extrabold tracking-tight">
-				You have signed out!
+				Uspešno ste se odjavili.
 			</Typography>
 		</div>
 	);

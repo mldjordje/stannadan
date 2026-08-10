@@ -7,40 +7,44 @@ import Google from 'next-auth/providers/google';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const googleConfigured = Boolean(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET);
+const adminUsername = isProduction ? process.env.AUTH_ADMIN_USERNAME || 'admin' : 'admin';
+const adminPassword = isProduction ? process.env.AUTH_ADMIN_PASSWORD : 'admin';
+const adminEmails = (process.env.AUTH_ADMIN_EMAILS || '')
+	.split(',')
+	.map((item) => item.trim().toLowerCase())
+	.filter(Boolean);
+const credentialsAdminEmail = adminEmails[0] || 'admin@local.invalid';
 
 function resolveDefaultRoles(email?: string | null) {
-	const adminEmails = (process.env.AUTH_ADMIN_EMAILS || '')
-		.split(',')
-		.map((item) => item.trim().toLowerCase())
-		.filter(Boolean);
 	const normalizedEmail = email?.toLowerCase() || '';
 
-	if (!isProduction && normalizedEmail === 'admin@fusetheme.com') {
+	if (
+		adminEmails.includes(normalizedEmail) ||
+		(!isProduction && normalizedEmail === 'admin@local.invalid') ||
+		(Boolean(adminPassword) && normalizedEmail === credentialsAdminEmail)
+	) {
 		return ['admin'];
 	}
 
-	return adminEmails.includes(normalizedEmail) ? ['admin'] : ['customer'];
+	return ['customer'];
 }
 
-const developmentCredentials = Credentials({
-	name: 'Development admin',
+const adminCredentials = Credentials({
+	name: isProduction ? 'Admin login' : 'Development admin',
 	authorize(formInput) {
-		if (isProduction || formInput.email !== 'admin' || formInput.password !== 'admin') {
+		if (!adminPassword || formInput.email !== adminUsername || formInput.password !== adminPassword) {
 			return null;
 		}
 
 		return {
-			id: 'local-development-admin',
-			email: 'admin@fusetheme.com',
-			name: 'Development admin'
+			id: isProduction ? 'production-admin' : 'local-development-admin',
+			email: isProduction ? credentialsAdminEmail : 'admin@local.invalid',
+			name: isProduction ? 'Administrator' : 'Development admin'
 		};
 	}
 });
 
-export const providers: Provider[] = [
-	...(!isProduction ? [developmentCredentials] : []),
-	...(googleConfigured ? [Google] : [])
-];
+export const providers: Provider[] = [adminCredentials, ...(googleConfigured ? [Google] : [])];
 
 const config = {
 	theme: { logo: '/site-assets/images/logo/logo-white.png' },
