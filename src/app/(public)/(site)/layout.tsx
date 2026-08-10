@@ -1,15 +1,16 @@
-import { Marcellus } from 'next/font/google';
+import { Instrument_Serif } from 'next/font/google';
 import { auth } from '@auth/authJs';
-import SiteFooter from '@/components/site/SiteFooter';
-import SiteHeader from '@/components/site/SiteHeader';
+import { CinematicHeader } from '@/components/site/cinematic/CinematicHeader';
+import { SiteFooter } from '@/components/site/cinematic/SiteFooter';
+import { MotionProvider } from '@/components/site/motion/MotionProvider';
 import { readStayData } from '@/lib/stay/store';
 import { UserRole } from '@/lib/stay/types';
 import './site-globals.css';
 
-const marcellus = Marcellus({
+const instrumentSerif = Instrument_Serif({
 	subsets: ['latin'],
 	weight: '400',
-	variable: '--font-marcellus',
+	variable: '--font-instrument',
 	display: 'swap'
 });
 
@@ -18,10 +19,32 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
 	const roles = Array.isArray(session?.db?.role) ? session.db.role : session?.db?.role ? [session.db.role] : [];
 
 	return (
-		<div className={`${marcellus.variable} site-app`}>
-			<SiteHeader property={data.property} userName={session?.db?.displayName || session?.user?.name} roles={roles as UserRole[]} />
-			<main>{children}</main>
-			<SiteFooter property={data.property} />
-		</div>
+		<MotionProvider className={`${instrumentSerif.variable} site-app`}>
+			<a
+				className="site-skip-link"
+				href="#main-content"
+			>
+				Preskoči na sadržaj
+			</a>
+			<CinematicHeader
+				property={data.property}
+				userName={session?.db?.displayName || session?.user?.name}
+				roles={roles as UserRole[]}
+			/>
+			<main
+				id="main-content"
+				tabIndex={-1}
+			>
+				{children}
+			</main>
+			<SiteFooter
+				property={data.property}
+				apartments={data.apartments.map(({ id, slug, name }) => ({
+					id,
+					slug,
+					name
+				}))}
+			/>
+		</MotionProvider>
 	);
 }

@@ -1,15 +1,35 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import BookingRequestForm from '@/components/site/BookingRequestForm';
-import PageHero from '@/components/site/PageHero';
+import BookingRequestForm from '@/components/site/booking/BookingRequestForm';
+import { EditorialGallery } from '@/components/site/cinematic/EditorialGallery';
 import { formatCurrency } from '@/lib/stay/format';
 import { readStayData } from '@/lib/stay/store';
+import type { StayAmenity } from '@/lib/stay/types';
+import styles from './page.module.css';
 
 type ApartmentDetailsPageProps = {
 	params: Promise<{
 		slug: string;
 	}>;
 };
+
+const amenityLabels: Record<StayAmenity, string> = {
+	'Self check-in': 'Samostalni dolazak',
+	'Fast Wi-Fi': 'Brz Wi-Fi',
+	Parking: 'Parking',
+	'Pet friendly': 'Ljubimci su dobrodošli',
+	'Air conditioning': 'Klima-uređaj',
+	Kitchen: 'Kuhinja',
+	Washer: 'Mašina za veš',
+	Workspace: 'Radni kutak',
+	'Smart TV': 'Smart TV',
+	Balcony: 'Balkon',
+	'Breakfast option': 'Doručak po dogovoru'
+};
+
+function formatRule(rule: string) {
+	return rule.replace('pusenja', 'pušenja').replace('kucni', 'kućni');
+}
 
 export default async function ApartmentDetailsPage({ params }: ApartmentDetailsPageProps) {
 	const { slug } = await params;
@@ -21,71 +41,116 @@ export default async function ApartmentDetailsPage({ params }: ApartmentDetailsP
 	}
 
 	return (
-		<>
-			<PageHero kicker={apartment.locationNote} title={apartment.name} description={apartment.description} />
-			<section className="tw-pb-10">
-				<div className="container">
-					<div className="row g-4 site-gallery-grid">
-						{apartment.gallery.map((image) => (
-							<div key={image} className="col-md-4">
-								<Image src={image} alt={apartment.name} width={900} height={640} className="w-100" />
-							</div>
-						))}
+		<article className={styles.page}>
+			<header className={styles.opening}>
+				<div className={styles.openingMedia}>
+					<Image
+						className={styles.openingImage}
+						src={apartment.coverImage}
+						alt={`${apartment.name} — enterijer apartmana`}
+						fill
+						priority
+						sizes="100vw"
+					/>
+				</div>
+
+				<div className={styles.openingCopy}>
+					<p className={styles.location}>{apartment.locationNote}</p>
+					<h1>{apartment.name}</h1>
+					<dl className={styles.openingFacts}>
+						<div>
+							<dt>Noćenje od</dt>
+							<dd>{formatCurrency(apartment.pricePerNight)}</dd>
+						</div>
+						<div>
+							<dt>Gosti / kreveti</dt>
+							<dd>
+								{apartment.guests} / {apartment.beds}
+							</dd>
+						</div>
+						<div>
+							<dt>Prostor / kupatila</dt>
+							<dd>
+								{apartment.size} m² / {apartment.baths}
+							</dd>
+						</div>
+					</dl>
+				</div>
+			</header>
+
+			<EditorialGallery
+				images={apartment.gallery}
+				name={apartment.name}
+			/>
+
+			<section
+				className={styles.story}
+				aria-labelledby="story-title"
+			>
+				<div className={styles.storyInner}>
+					<p className={styles.sectionIndex}>01 / Boravak</p>
+					<h2 id="story-title">Mesto za vaš ritam Niša.</h2>
+					<p className={styles.storyText}>{apartment.description}</p>
+				</div>
+			</section>
+
+			<section
+				className={styles.details}
+				aria-labelledby="details-title"
+			>
+				<div className={styles.detailsInner}>
+					<header className={styles.detailsHeader}>
+						<p className={styles.sectionIndex}>02 / Važno za boravak</p>
+						<h2 id="details-title">Sve što treba, jasno i mirno.</h2>
+					</header>
+
+					<div className={styles.lists}>
+						<div className={styles.list}>
+							<h3>Sadržaji</h3>
+							<ul>
+								{apartment.amenities.map((item) => (
+									<li key={item}>{amenityLabels[item]}</li>
+								))}
+							</ul>
+						</div>
+
+						<div className={styles.list}>
+							<h3>Pravila kuće</h3>
+							<ul>
+								{apartment.rules.map((item) => (
+									<li key={item}>{formatRule(item)}</li>
+								))}
+							</ul>
+						</div>
 					</div>
 				</div>
 			</section>
-			<section className="tw-pb-18">
-				<div className="container">
-					<div className="row g-5">
-						<div className="col-lg-7">
-							<div className="site-surface tw-p-7 h-100">
-								<div className="d-flex flex-wrap gap-3 tw-mb-5">
-									<span className="site-mini-card text-white">{apartment.guests} gosta</span>
-									<span className="site-mini-card text-white">{apartment.beds} kreveta</span>
-									<span className="site-mini-card text-white">{apartment.baths} kupatila</span>
-									<span className="site-mini-card text-white">{apartment.size} m2</span>
-								</div>
-								<p className="text-white-50 tw-text-xl tw-mb-6">{apartment.description}</p>
-								<div className="row g-4 tw-mb-6">
-									<div className="col-md-6">
-										<h3 className="tw-text-8 fw-normal text-white tw-mb-4">Sadrzaji</h3>
-										<ul className="d-flex flex-column tw-gap-3 text-white-50">
-											{apartment.amenities.map((item) => (
-												<li key={item} className="d-flex align-items-center gap-3">
-													<i className="ph-fill ph-check-circle text-main-600" />
-													<span>{item}</span>
-												</li>
-											))}
-										</ul>
-									</div>
-									<div className="col-md-6">
-										<h3 className="tw-text-8 fw-normal text-white tw-mb-4">Pravila</h3>
-										<ul className="d-flex flex-column tw-gap-3 text-white-50">
-											{apartment.rules.map((item) => (
-												<li key={item} className="d-flex align-items-center gap-3">
-													<i className="ph-fill ph-dot-outline text-main-600" />
-													<span>{item}</span>
-												</li>
-											))}
-										</ul>
-									</div>
-								</div>
-								<div className="site-mini-card">
-									<p className="mb-2 text-white">Ocena gostiju: {apartment.rating.toFixed(2)} / 5</p>
-									<p className="mb-0 text-white-50">{apartment.reviewCount} verifikovanih recenzija</p>
-								</div>
-							</div>
-						</div>
-						<div className="col-lg-5">
-							<BookingRequestForm apartment={apartment} />
-							<div className="site-mini-card mt-4">
-								<p className="mb-2 text-white">Cena od {formatCurrency(apartment.pricePerNight)} po nocenju</p>
-								<p className="mb-0 text-white-50">Booking.com i direktne rezervacije koriste isti availability feed za ovaj apartman.</p>
-							</div>
-						</div>
-					</div>
+
+			<section
+				className={styles.proof}
+				aria-labelledby="proof-title"
+			>
+				<div className={styles.proofInner}>
+					<p className={styles.sectionIndex}>03 / Utisci gostiju</p>
+					<p className={styles.rating}>{apartment.rating.toFixed(2)}</p>
+					<h2 id="proof-title">Ocenjeno iz stvarnih boravaka.</h2>
+					<p className={styles.reviews}>{apartment.reviewCount} utisaka gostiju / ocena od 5</p>
 				</div>
 			</section>
-		</>
+
+			<section
+				className={styles.booking}
+				aria-labelledby="booking-title"
+			>
+				<div className={styles.bookingInner}>
+					<header className={styles.bookingIntro}>
+						<p className={styles.sectionIndex}>04 / Rezervacija</p>
+						<h2 id="booking-title">Pošaljite upit za svoj termin.</h2>
+						<p>Unesite datume i kontakt. Odgovor o terminu dobićete direktno od domaćina.</p>
+					</header>
+					<BookingRequestForm apartment={apartment} />
+				</div>
+			</section>
+		</article>
 	);
 }

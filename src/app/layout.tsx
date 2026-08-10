@@ -6,19 +6,29 @@ import '../../public/assets/fonts/Geist/geist.css';
 import '../../public/assets/fonts/meteocons/style.css';
 import '../../public/assets/styles/prism.css';
 import { SessionProvider } from 'next-auth/react';
+import type { Metadata } from 'next';
 import { auth } from '@auth/authJs';
-import generateMetadata from '../utils/generateMetadata';
 import App from './App';
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const metadata = await generateMetadata({
-	title: 'Stan na Dan Nis',
-	description: 'Next.js aplikacija za stan na dan u Nisu sa admin panelom, Google prijavom i Booking.com sync slojem.',
-	cardImage: '/card.png',
+export const metadata: Metadata = {
+	title: 'Stan na Dan Niš | Apartmani u Nišu',
+	description: 'Pažljivo uređeni apartmani za udoban boravak u Nišu, uz direktan kontakt sa domaćinom.',
 	robots: 'follow, index',
-	favicon: '/site-assets/images/logo/favicon.png',
-	url: 'http://localhost:3000'
-});
+	icons: { icon: '/site-assets/images/logo/favicon.png' },
+	openGraph: {
+		title: 'Stan na Dan Niš | Apartmani u Nišu',
+		description: 'Pažljivo uređeni apartmani za udoban boravak u Nišu, uz direktan kontakt sa domaćinom.',
+		images: ['/card.png'],
+		type: 'website'
+	},
+	twitter: {
+		card: 'summary_large_image',
+		title: 'Stan na Dan Niš | Apartmani u Nišu',
+		description: 'Pažljivo uređeni apartmani za udoban boravak u Nišu, uz direktan kontakt sa domaćinom.',
+		images: ['/card.png']
+	}
+};
 
 export default async function RootLayout({
 	children
@@ -28,7 +38,7 @@ export default async function RootLayout({
 	const session = await auth();
 
 	return (
-		<html lang="en">
+		<html lang="sr-Latn">
 			<head>
 				<meta charSet="utf-8" />
 				<meta

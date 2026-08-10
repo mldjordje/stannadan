@@ -1,0 +1,59 @@
+.entry {
+	display: inline-flex;
+	min-height: 44px;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	border: 1px solid currentColor;
+	border-radius: 0;
+	font-family: var(--site-font-ui);
+	font-size: 0.75rem;
+	font-weight: 650;
+	letter-spacing: 0.12em;
+	line-height: 1;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+.entry:focus-visible {
+	outline: 2px solid var(--site-cobalt);
+	outline-offset: 3px;
+}
+
+.entry:active {
+	background: var(--site-cobalt);
+	border-color: var(--site-cobalt);
+	color: #fff;
+}
+
+.arrow {
+	width: 1.125rem;
+	height: 1.125rem;
+	flex: 0 0 auto;
+	fill: none;
+	stroke: currentColor;
+	stroke-linecap: square;
+	stroke-linejoin: miter;
+	stroke-width: 1.75;
+}
+
+.entry.edge {
+	padding: 0 1.1rem;
+	background: var(--site-bone);
+	color: var(--site-ink);
+}
+
+.entry.menu {
+	width: min(100%, 28rem);
+	padding: 0.9rem 0;
+	border-width: 1px 0;
+	color: var(--site-ink);
+}
+
+.entry.mobileBar {
+	width: 100%;
+	padding: 0 1rem;
+	background: var(--site-cobalt);
+	border-color: var(--site-cobalt);
+	color: #fff;
+}

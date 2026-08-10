@@ -1,68 +1,85 @@
 import Link from 'next/link';
-import PageHero from '@/components/site/PageHero';
+import PublicInformationLayout from '@/components/site/shared/PublicInformationLayout';
 import { readStayData } from '@/lib/stay/store';
 
 export default async function ContactPage() {
 	const data = await readStayData();
 
 	return (
-		<>
-			<PageHero
-				kicker="Kontakt i lokacija"
-				title="Brza komunikacija sa gostima i jednostavan dolazak u centar Nisa."
-				description="Na ovoj stranici mozes drzati direktne kontakt informacije, instrukcije za dolazak i najvaznije tacke u okolini."
-			/>
-			<section className="tw-pb-18">
-				<div className="container">
-					<div className="row g-4">
-						<div className="col-lg-5">
-							<div className="site-surface tw-p-7 h-100">
-								<h3 className="tw-text-8 fw-normal text-white tw-mb-6">Kontakt podaci</h3>
-								<ul className="d-flex flex-column tw-gap-4 text-white-50">
-									<li>
-										<span className="d-block text-white">Telefon</span>
-										<Link href={`tel:${data.property.phone}`} className="text-main-600">
-											{data.property.phone}
-										</Link>
-									</li>
-									<li>
-										<span className="d-block text-white">Email</span>
-										<Link href={`mailto:${data.property.email}`} className="text-main-600">
-											{data.property.email}
-										</Link>
-									</li>
-									<li>
-										<span className="d-block text-white">Adresa</span>
-										<Link href={data.property.googleMapsUrl} target="_blank" className="text-main-600">
-											{data.property.address}
-										</Link>
-									</li>
-								</ul>
-							</div>
-						</div>
-						<div className="col-lg-7">
-							<div className="site-surface tw-p-7 h-100">
-								<h3 className="tw-text-8 fw-normal text-white tw-mb-6">Sta je u blizini</h3>
-								<div className="row g-4">
-									{data.property.neighborhood.map((item) => (
-										<div key={item.label} className="col-md-4">
-											<div className="site-mini-card h-100">
-												<p className="mb-2 text-white">{item.label}</p>
-												<p className="mb-0 text-white-50">{item.distance}</p>
-											</div>
-										</div>
-									))}
-								</div>
-								<div className="site-mini-card mt-4">
-									<p className="mb-0 text-white-50">
-										Za pune Booking.com ili Google Maps integracije u produkciji ubacuju se pravi property linkovi i uputstva za self check-in.
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+		<PublicInformationLayout
+			intro="Kontakt i lokacija"
+			heading={`Na pravom mestu u gradu ${data.property.city}.`}
+			description="Javite nam kada planirate dolazak. Odgovorićemo direktno, pomoći oko izbora apartmana i podeliti sve detalje za prijatan dolazak."
+			actions={
+				<>
+					<Link href={`tel:${data.property.phone}`}>Pozovite domaćina</Link>
+					<Link href={`mailto:${data.property.email}`}>Pošaljite email</Link>
+				</>
+			}
+			aside={
+				<section aria-labelledby="neighborhood-title">
+					<h2
+						id="neighborhood-title"
+						data-public-section-title
+					>
+						U komšiluku
+					</h2>
+					<ul data-public-list>
+						{data.property.neighborhood.map((item) => (
+							<li
+								key={item.label}
+								data-public-row
+							>
+								<span data-public-label>{item.label}</span>
+								<span data-public-value>{item.distance}</span>
+							</li>
+						))}
+					</ul>
+				</section>
+			}
+		>
+			<section
+				data-public-section
+				aria-labelledby="contact-details-title"
+			>
+				<h2
+					id="contact-details-title"
+					data-public-section-title
+				>
+					Direktan kontakt
+				</h2>
+				<address>
+					<ul data-public-list>
+						<li data-public-row>
+							<span data-public-label>Telefon</span>
+							<p data-public-value>
+								<Link href={`tel:${data.property.phone}`}>{data.property.phone}</Link>
+								<span data-public-meta>Za pitanja o terminima i boravku</span>
+							</p>
+						</li>
+						<li data-public-row>
+							<span data-public-label>Email</span>
+							<p data-public-value>
+								<Link href={`mailto:${data.property.email}`}>{data.property.email}</Link>
+								<span data-public-meta>Pišite nam kada vam odgovara</span>
+							</p>
+						</li>
+						<li data-public-row>
+							<span data-public-label>Adresa</span>
+							<p data-public-value>
+								<Link
+									href={data.property.googleMapsUrl}
+									target="_blank"
+									rel="noreferrer"
+								>
+									{data.property.address}
+								</Link>
+								<span data-public-meta>Otvorite lokaciju na mapi</span>
+							</p>
+						</li>
+					</ul>
+				</address>
 			</section>
-		</>
+		</PublicInformationLayout>
 	);
 }

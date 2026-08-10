@@ -1,0 +1,128 @@
+.section {
+	display: grid;
+	min-height: 100svh;
+	grid-template-columns: minmax(0, 1.05fr) minmax(20rem, 0.65fr);
+	align-items: center;
+	gap: clamp(4rem, 10vw, 12rem);
+	padding: var(--site-section) max(var(--site-gutter), var(--site-safe-right)) var(--site-section)
+		max(var(--site-gutter), var(--site-safe-left));
+	background: var(--site-cobalt);
+	color: #fff;
+}
+
+.copy h2,
+.section > h2 {
+	max-width: 10ch;
+	margin: clamp(2rem, 5vw, 4rem) 0 2rem;
+	color: #fff;
+	font-size: clamp(4.3rem, 9vw, 10rem);
+}
+
+.copy > p:last-child {
+	max-width: 36rem;
+	margin: 0;
+	font-size: clamp(1rem, 1.5vw, 1.25rem);
+}
+
+.index {
+	margin: 0;
+	font-size: 0.67rem;
+	font-weight: 700;
+	letter-spacing: 0.15em;
+	text-transform: uppercase;
+}
+
+.form {
+	display: grid;
+	gap: 1.35rem;
+	padding: clamp(1.5rem, 4vw, 3rem);
+	border: 1px solid rgb(255 255 255 / 48%);
+	background: var(--site-bone);
+	color: var(--site-ink);
+}
+
+.form label {
+	display: grid;
+	gap: 0.55rem;
+}
+
+.form label > span {
+	font-size: 0.66rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.form input,
+.form select {
+	width: 100%;
+	min-height: 50px;
+	padding: 0.7rem 0.8rem;
+	border: 1px solid rgb(9 11 13 / 32%);
+	border-radius: 0;
+	background: transparent;
+	color: var(--site-ink);
+	font-size: 1rem;
+}
+
+.dates {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+.form button,
+.allApartments {
+	display: inline-flex;
+	min-height: 52px;
+	align-items: center;
+	justify-content: center;
+	padding: 0.8rem 1.2rem;
+	border: 1px solid var(--site-ink);
+	border-radius: 0;
+	background: var(--site-ink);
+	color: var(--site-bone);
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.13em;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+.form button:active,
+.allApartments:active {
+	background: var(--site-bone);
+	color: var(--site-ink);
+}
+
+.allApartments {
+	width: fit-content;
+	margin-top: 2rem;
+}
+
+@media (max-width: 63.99rem) {
+	.section {
+		min-height: 0;
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+@media (max-width: 47.99rem) {
+	.section {
+		gap: 3rem;
+		padding: 6rem 1rem;
+	}
+
+	.copy h2,
+	.section > h2 {
+		font-size: clamp(3.6rem, 18vw, 5.5rem);
+	}
+
+	.form {
+		padding: 1.1rem;
+	}
+
+	.dates {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}

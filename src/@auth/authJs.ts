@@ -2,7 +2,11 @@ import NextAuth from 'next-auth';
 import UserModel from '@auth/user/models/UserModel';
 import type { NextAuthConfig } from 'next-auth';
 import type { Provider } from 'next-auth/providers';
+import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
+
+const isProduction = process.env.NODE_ENV === 'production';
+const googleConfigured = Boolean(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET);
 
 function resolveDefaultRoles(email?: string | null) {
 	const adminEmails = (process.env.AUTH_ADMIN_EMAILS || '')
@@ -11,10 +15,32 @@ function resolveDefaultRoles(email?: string | null) {
 		.filter(Boolean);
 	const normalizedEmail = email?.toLowerCase() || '';
 
+	if (!isProduction && normalizedEmail === 'admin@fusetheme.com') {
+		return ['admin'];
+	}
+
 	return adminEmails.includes(normalizedEmail) ? ['admin'] : ['customer'];
 }
 
-export const providers: Provider[] = [Google];
+const developmentCredentials = Credentials({
+	name: 'Development admin',
+	authorize(formInput) {
+		if (isProduction || formInput.email !== 'admin' || formInput.password !== 'admin') {
+			return null;
+		}
+
+		return {
+			id: 'local-development-admin',
+			email: 'admin@fusetheme.com',
+			name: 'Development admin'
+		};
+	}
+});
+
+export const providers: Provider[] = [
+	...(!isProduction ? [developmentCredentials] : []),
+	...(googleConfigured ? [Google] : [])
+];
 
 const config = {
 	theme: { logo: '/site-assets/images/logo/logo-white.png' },
