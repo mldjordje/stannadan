@@ -1,7 +1,7 @@
 import { Instrument_Serif } from 'next/font/google';
 import { auth } from '@auth/authJs';
-import SiteFooter from '@/components/site/SiteFooter';
 import { CinematicHeader } from '@/components/site/cinematic/CinematicHeader';
+import { SiteFooter } from '@/components/site/cinematic/SiteFooter';
 import { MotionProvider } from '@/components/site/motion/MotionProvider';
 import { readStayData } from '@/lib/stay/store';
 import { UserRole } from '@/lib/stay/types';
@@ -26,7 +26,14 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
 				roles={roles as UserRole[]}
 			/>
 			<main id="main-content">{children}</main>
-			<SiteFooter property={data.property} />
+			<SiteFooter
+				property={data.property}
+				apartments={data.apartments.map(({ id, slug, name }) => ({
+					id,
+					slug,
+					name
+				}))}
+			/>
 		</MotionProvider>
 	);
 }

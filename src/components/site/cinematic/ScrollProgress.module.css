@@ -1,0 +1,40 @@
+.rail {
+	position: fixed;
+	z-index: 70;
+	top: 50%;
+	right: max(0.7rem, var(--site-safe-right));
+	display: flex;
+	flex-direction: column;
+	gap: 0.55rem;
+	transform: translateY(-50%);
+}
+
+.rail span {
+	width: 2px;
+	height: 1.2rem;
+	background: rgb(241 237 228 / 30%);
+	transition:
+		height 180ms ease,
+		background-color 180ms ease;
+}
+
+.rail .active {
+	height: 2.5rem;
+	background: var(--site-cobalt);
+}
+
+.srStatus {
+	position: fixed;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+@media (max-width: 63.99rem), (prefers-reduced-motion: reduce) {
+	.rail {
+		display: none;
+	}
+}

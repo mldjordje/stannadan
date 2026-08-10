@@ -1,0 +1,210 @@
+.sequence {
+	position: relative;
+	min-height: 100svh;
+	background: var(--site-ink);
+	overflow: clip;
+}
+
+.stage {
+	position: relative;
+	min-height: 100svh;
+	overflow: hidden;
+}
+
+.media,
+.media picture,
+.fallbackTransition,
+.transitionCanvas {
+	position: absolute;
+	inset: 0;
+}
+
+.media {
+	background: var(--site-ink);
+	will-change: transform;
+}
+
+.media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.media::after {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(90deg, rgb(9 11 13 / 70%) 0%, rgb(9 11 13 / 16%) 52%, rgb(9 11 13 / 42%) 100%);
+	content: '';
+	pointer-events: none;
+}
+
+.fallbackTransition {
+	clip-path: inset(0 var(--hero-wipe) 0 0);
+	opacity: var(--hero-progress);
+}
+
+.transitionCanvas {
+	z-index: 1;
+	width: 100%;
+	height: 100%;
+	opacity: var(--hero-progress);
+	pointer-events: none;
+}
+
+.copy {
+	position: absolute;
+	z-index: 3;
+	right: max(var(--site-gutter), var(--site-safe-right));
+	top: 50%;
+	left: max(var(--site-gutter), var(--site-safe-left));
+	max-width: 78rem;
+	transform: translateY(-48%);
+}
+
+.location {
+	margin-bottom: clamp(1.25rem, 3vh, 2.4rem);
+	font-size: 0.69rem;
+	font-weight: 650;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+}
+
+.location span {
+	margin-inline: 0.6rem;
+	color: var(--site-cobalt);
+}
+
+.title {
+	max-width: 10ch;
+	margin-bottom: clamp(1.25rem, 3vh, 2.5rem);
+	font-size: clamp(4.25rem, 12.5vw, 12rem) !important;
+	text-shadow: 0 0.08em 0.35em rgb(9 11 13 / 25%);
+	will-change: transform, opacity;
+}
+
+.arrival {
+	max-width: 34rem;
+	margin: 0;
+	font-size: clamp(1rem, 1.5vw, 1.25rem);
+	line-height: 1.4;
+}
+
+.scrollCue {
+	position: absolute;
+	z-index: 3;
+	bottom: max(1.25rem, var(--site-safe-bottom));
+	left: max(var(--site-gutter), var(--site-safe-left));
+	display: flex;
+	align-items: center;
+	gap: 0.8rem;
+	margin: 0;
+	font-size: 0.62rem;
+	font-weight: 650;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+}
+
+.scrollCue span {
+	width: clamp(2rem, 5vw, 4rem);
+	height: 1px;
+	background: currentColor;
+}
+
+.apartmentReveal {
+	position: absolute;
+	z-index: 3;
+	right: max(var(--site-gutter), var(--site-safe-right));
+	bottom: max(1.25rem, var(--site-safe-bottom));
+	display: flex;
+	align-items: baseline;
+	gap: 1rem;
+	will-change: clip-path, transform;
+}
+
+.apartmentReveal span {
+	color: var(--site-smoke);
+	font-size: 0.62rem;
+	letter-spacing: 0.12em;
+}
+
+.apartmentReveal a {
+	font-family: var(--site-font-display);
+	font-size: clamp(1.6rem, 3vw, 3.5rem);
+	line-height: 1;
+	text-decoration: none;
+}
+
+@media (min-width: 64rem) {
+	.sequence {
+		min-height: 195svh;
+	}
+
+	.stage {
+		position: sticky;
+		top: 0;
+	}
+}
+
+@media (max-width: 63.99rem) {
+	.transitionCanvas {
+		display: none;
+	}
+
+	.fallbackTransition {
+		clip-path: inset(0 0 0 64%);
+		opacity: 0.35;
+	}
+}
+
+@media (max-width: 47.99rem) {
+	.media::after {
+		background: linear-gradient(0deg, rgb(9 11 13 / 82%) 0%, rgb(9 11 13 / 18%) 62%, rgb(9 11 13 / 42%) 100%);
+	}
+
+	.copy {
+		right: 1rem;
+		bottom: 7rem;
+		left: 1rem;
+		top: auto;
+		transform: none;
+	}
+
+	.title {
+		font-size: clamp(3.6rem, 20vw, 6rem) !important;
+	}
+
+	.arrival {
+		max-width: 28ch;
+		font-size: 0.92rem;
+	}
+
+	.location {
+		margin-bottom: 0.9rem;
+	}
+
+	.scrollCue {
+		display: none;
+	}
+
+	.apartmentReveal {
+		right: 1rem;
+		bottom: 1.25rem;
+		left: 1rem;
+		justify-content: space-between;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sequence,
+	.stage {
+		min-height: 100svh;
+	}
+
+	.transitionCanvas {
+		display: none;
+	}
+
+	.fallbackTransition {
+		display: none;
+	}
+}

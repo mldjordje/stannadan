@@ -37,20 +37,20 @@
 	stroke-width: 1.75;
 }
 
-.edge {
+.entry.edge {
 	padding: 0 1.1rem;
 	background: var(--site-bone);
 	color: var(--site-ink);
 }
 
-.menu {
+.entry.menu {
 	width: min(100%, 28rem);
 	padding: 0.9rem 0;
 	border-width: 1px 0;
 	color: var(--site-ink);
 }
 
-.mobileBar {
+.entry.mobileBar {
 	width: 100%;
 	padding: 0 1rem;
 	background: var(--site-cobalt);
