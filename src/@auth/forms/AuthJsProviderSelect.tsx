@@ -5,6 +5,8 @@ import { authJsProviderMap } from '@auth/authJs';
 const providerLogoPath = 'https://authjs.dev/img/providers';
 
 function AuthJsProviderSelect() {
+	const socialProviders = authJsProviderMap.filter((provider) => provider.id !== 'credentials');
+
 	function handleSignIn(providerId: string) {
 		try {
 			signIn(providerId);
@@ -13,7 +15,7 @@ function AuthJsProviderSelect() {
 		}
 	}
 
-	if (authJsProviderMap?.length === 0) {
+	if (socialProviders.length === 0) {
 		return null;
 	}
 
@@ -23,25 +25,23 @@ function AuthJsProviderSelect() {
 				<span>ili nastavite putem</span>
 			</div>
 			<div className="auth-provider-list">
-				{Object.values(authJsProviderMap)
-					.filter((provider) => provider.id !== 'credentials')
-					.map((provider) => (
-						<Button
-							key={provider.id}
-							className="auth-provider-button"
-							onClick={() => handleSignIn(provider.id)}
-							endIcon={
-								<span className="auth-provider-icon">
-									<img
-										src={`${providerLogoPath}/${provider.id}.svg`}
-										alt=""
-									/>
-								</span>
-							}
-						>
-							<span>Prijava preko {provider.name}</span>
-						</Button>
-					))}
+				{socialProviders.map((provider) => (
+					<Button
+						key={provider.id}
+						className="auth-provider-button"
+						onClick={() => handleSignIn(provider.id)}
+						endIcon={
+							<span className="auth-provider-icon">
+								<img
+									src={`${providerLogoPath}/${provider.id}.svg`}
+									alt=""
+								/>
+							</span>
+						}
+					>
+						<span>Prijava preko {provider.name}</span>
+					</Button>
+				))}
 			</div>
 		</div>
 	);

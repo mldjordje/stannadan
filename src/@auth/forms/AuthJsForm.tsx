@@ -4,6 +4,7 @@ import AuthJsProviderSelect from './AuthJsProviderSelect';
 import AuthJsCredentialsSignInForm from './AuthJsCredentialsSignInForm';
 import AuthJsCredentialsSignUpForm from './AuthJsCredentialsSignUpForm';
 import signinErrors from './signinErrors';
+import { authJsProviderMap } from '@auth/authJs';
 
 type AuthJsFormProps = { formType: 'signin' | 'signup' };
 
@@ -15,6 +16,7 @@ function AuthJsForm(props: AuthJsFormProps) {
 	const errorType = searchParams.get('error');
 
 	const error = errorType && (signinErrors[errorType] ?? signinErrors.default);
+	const credentialsEnabled = authJsProviderMap.some((provider) => provider.id === 'credentials');
 
 	return (
 		<div className="flex flex-col space-y-8">
@@ -30,8 +32,8 @@ function AuthJsForm(props: AuthJsFormProps) {
 					{error}
 				</Alert>
 			)}
-			{formType === 'signin' && <AuthJsCredentialsSignInForm />}
-			{formType === 'signup' && <AuthJsCredentialsSignUpForm />}
+			{formType === 'signin' && credentialsEnabled && <AuthJsCredentialsSignInForm />}
+			{formType === 'signup' && credentialsEnabled && <AuthJsCredentialsSignUpForm />}
 			<AuthJsProviderSelect />
 		</div>
 	);
