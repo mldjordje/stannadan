@@ -1,0 +1,359 @@
+.header {
+	position: fixed;
+	z-index: 80;
+	top: 0;
+	right: 0;
+	left: 0;
+	color: var(--site-bone);
+}
+
+.bar {
+	position: relative;
+	z-index: 2;
+	display: grid;
+	min-height: calc(4.5rem + var(--site-safe-top));
+	grid-template-columns: minmax(8rem, 1fr) auto minmax(8rem, 1fr);
+	align-items: center;
+	gap: clamp(1rem, 2.5vw, 3rem);
+	padding: var(--site-safe-top) max(var(--site-gutter), var(--site-safe-right)) 0
+		max(var(--site-gutter), var(--site-safe-left));
+	border-bottom: 1px solid transparent;
+	background: transparent;
+	transition:
+		background-color 180ms ease,
+		border-color 180ms ease;
+}
+
+.scrolled .bar {
+	background: var(--site-ink);
+	border-color: var(--site-line);
+}
+
+.logo {
+	display: inline-flex;
+	width: fit-content;
+	min-height: 44px;
+	align-items: center;
+	gap: 0.8rem;
+	text-decoration: none;
+}
+
+.logo img {
+	width: clamp(5.75rem, 8vw, 7rem);
+	height: auto;
+}
+
+.logo span {
+	padding-left: 0.8rem;
+	border-left: 1px solid var(--site-line);
+	font-size: 0.65rem;
+	letter-spacing: 0.16em;
+	opacity: 0.72;
+	text-transform: uppercase;
+}
+
+.desktopNav {
+	display: flex;
+	align-items: stretch;
+	gap: clamp(1.25rem, 2.2vw, 2.6rem);
+}
+
+.navLink {
+	position: relative;
+	display: inline-flex;
+	min-height: 44px;
+	align-items: center;
+	font-size: 0.73rem;
+	font-weight: 550;
+	letter-spacing: 0.1em;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+.navLink::after {
+	position: absolute;
+	right: 0;
+	bottom: 0.4rem;
+	left: 0;
+	height: 1px;
+	background: var(--site-cobalt);
+	content: '';
+	opacity: 0;
+}
+
+.activeNavLink::after {
+	opacity: 1;
+}
+
+.actions {
+	display: flex;
+	justify-self: end;
+	align-items: center;
+	gap: 0.65rem;
+}
+
+.menuTrigger {
+	position: relative;
+	display: grid;
+	min-width: 4.75rem;
+	min-height: 44px;
+	grid-template-columns: 1rem auto;
+	align-content: center;
+	align-items: center;
+	column-gap: 0.65rem;
+	padding: 0 0.8rem;
+	border-color: currentColor;
+	border-radius: 0;
+}
+
+.menuTrigger span[aria-hidden='true'] {
+	grid-column: 1;
+	width: 1rem;
+	height: 1px;
+	background: currentColor;
+}
+
+.menuTrigger span[aria-hidden='true']:nth-child(2) {
+	margin-top: 0.3rem;
+}
+
+.menuText {
+	grid-row: 1 / span 2;
+	grid-column: 2;
+	font-size: 0.68rem;
+	font-weight: 650;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.menuTrigger:active,
+.closeButton:active,
+.accountLink:active,
+.sheetLink:active {
+	background: var(--site-cobalt);
+	color: #fff;
+}
+
+.menuSheet {
+	position: fixed;
+	z-index: 1;
+	inset: 0;
+	display: flex;
+	min-height: 100vh;
+	min-height: 100svh;
+	flex-direction: column;
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding: max(1.1rem, var(--site-safe-top)) max(var(--site-gutter), var(--site-safe-right))
+		max(1.1rem, var(--site-safe-bottom)) max(var(--site-gutter), var(--site-safe-left));
+	background: var(--site-bone);
+	color: var(--site-ink);
+	clip-path: inset(0 0 100% 0);
+	opacity: 0;
+	pointer-events: none;
+	transform: translateY(-1rem);
+	transition:
+		clip-path 420ms cubic-bezier(0.76, 0, 0.24, 1),
+		opacity 260ms ease,
+		transform 420ms cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.menuSheet[data-open='true'] {
+	clip-path: inset(0);
+	opacity: 1;
+	pointer-events: auto;
+	transform: translateY(0);
+}
+
+.sheetTopline {
+	display: flex;
+	min-height: 3.5rem;
+	align-items: flex-start;
+	justify-content: space-between;
+	border-bottom: 1px solid rgb(9 11 13 / 28%);
+	font-size: 0.68rem;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.closeButton {
+	position: relative;
+	width: 44px;
+	height: 44px;
+	margin-top: -0.45rem;
+	border-color: rgb(9 11 13 / 38%);
+	border-radius: 0;
+}
+
+.closeButton span {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 1.15rem;
+	height: 1px;
+	background: currentColor;
+	transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.closeButton span:last-child {
+	transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.sheetContent {
+	display: grid;
+	flex: 1;
+	grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.34fr);
+	align-items: end;
+	gap: clamp(3rem, 8vw, 9rem);
+	padding-top: clamp(3.5rem, 9vh, 7rem);
+}
+
+.sheetContent nav {
+	display: flex;
+	flex-direction: column;
+}
+
+.sheetLink {
+	display: grid;
+	min-width: 0;
+	min-height: 1.05em;
+	grid-template-columns: 2.6rem minmax(0, 1fr);
+	align-items: baseline;
+	border-bottom: 1px solid rgb(9 11 13 / 22%);
+	font-family: var(--site-font-display);
+	font-size: clamp(3.25rem, 8.5vw, 8.5rem);
+	letter-spacing: -0.045em;
+	line-height: 0.9;
+	text-decoration: none;
+}
+
+.sheetLink[aria-current='page'] {
+	color: var(--site-cobalt);
+}
+
+.sheetIndex {
+	font-family: var(--site-font-ui);
+	font-size: 0.6rem;
+	font-weight: 600;
+	letter-spacing: 0.1em;
+}
+
+.sheetAside {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 1.4rem;
+	padding-bottom: 0.4rem;
+}
+
+.accountLink {
+	display: flex;
+	min-height: 44px;
+	align-items: center;
+	gap: 0.7rem;
+	font-size: 0.76rem;
+	font-weight: 650;
+	letter-spacing: 0.11em;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+.accountLink span {
+	max-width: 10rem;
+	overflow: hidden;
+	font-weight: 400;
+	opacity: 0.55;
+	text-overflow: ellipsis;
+	text-transform: none;
+	white-space: nowrap;
+}
+
+.mobileBooking {
+	position: fixed;
+	z-index: 3;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: none;
+	padding: 0.65rem max(0.75rem, var(--site-safe-right)) max(0.65rem, var(--site-safe-bottom))
+		max(0.75rem, var(--site-safe-left));
+	background: var(--site-ink);
+	border-top: 1px solid var(--site-line);
+	opacity: 0;
+	pointer-events: none;
+	transform: translateY(100%);
+	transition:
+		opacity 180ms ease,
+		transform 220ms ease;
+}
+
+.mobileBooking[data-visible='true'] {
+	opacity: 1;
+	pointer-events: auto;
+	transform: translateY(0);
+}
+
+.header[data-menu-open='true'] .mobileBooking {
+	opacity: 0;
+	pointer-events: none;
+	transform: translateY(100%);
+}
+
+@media (max-width: 74rem) {
+	.bar {
+		grid-template-columns: minmax(0, 1fr) auto;
+	}
+
+	.desktopNav {
+		display: none;
+	}
+}
+
+@media (max-width: 47.99rem) {
+	.bar {
+		min-height: calc(4rem + var(--site-safe-top));
+		padding-right: max(0.75rem, var(--site-safe-right));
+		padding-left: max(0.75rem, var(--site-safe-left));
+	}
+
+	.logo span,
+	.edgeBooking,
+	.menuText {
+		display: none;
+	}
+
+	.menuTrigger {
+		min-width: 44px;
+		grid-template-columns: 1rem;
+		justify-content: center;
+		padding: 0;
+	}
+
+	.sheetContent {
+		grid-template-columns: minmax(0, 1fr);
+		align-items: start;
+		gap: 2.5rem;
+		padding-top: clamp(2.5rem, 8vh, 5rem);
+	}
+
+	.sheetLink {
+		grid-template-columns: 1.8rem minmax(0, 1fr);
+		font-size: clamp(3rem, 16vw, 5.75rem);
+	}
+
+	.sheetAside {
+		padding-bottom: 1rem;
+	}
+
+	.mobileBooking {
+		display: block;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.bar,
+	.menuSheet,
+	.mobileBooking {
+		transition: none;
+	}
+}

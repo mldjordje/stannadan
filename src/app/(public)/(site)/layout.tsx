@@ -1,7 +1,7 @@
 import { Instrument_Serif } from 'next/font/google';
 import { auth } from '@auth/authJs';
 import SiteFooter from '@/components/site/SiteFooter';
-import SiteHeader from '@/components/site/SiteHeader';
+import { CinematicHeader } from '@/components/site/cinematic/CinematicHeader';
 import { MotionProvider } from '@/components/site/motion/MotionProvider';
 import { readStayData } from '@/lib/stay/store';
 import { UserRole } from '@/lib/stay/types';
@@ -20,7 +20,7 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
 
 	return (
 		<MotionProvider className={`${instrumentSerif.variable} site-app`}>
-			<SiteHeader
+			<CinematicHeader
 				property={data.property}
 				userName={session?.db?.displayName || session?.user?.name}
 				roles={roles as UserRole[]}
