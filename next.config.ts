@@ -5,6 +5,14 @@ const isTurbopack = process.env.TURBOPACK === '1';
 // Conditionally add webpack configuration only when NOT using turbopack
 const nextConfig: NextConfig = {
 	reactStrictMode: false,
+	images: {
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: '**.public.blob.vercel-storage.com'
+			}
+		]
+	},
 	eslint: {
 		// Only enable ESLint in development
 		ignoreDuringBuilds: process.env.NODE_ENV === 'production'

@@ -3,13 +3,20 @@ import { NextResponse } from 'next/server';
 import { bookingSyncSchema } from '@/lib/stay/schema';
 import { readStayData, updateStayData } from '@/lib/stay/store';
 import { BookingSyncConfig, SyncLogEntry } from '@/lib/stay/types';
+import { requireAdmin } from '@/lib/auth/requireAdmin';
 
 export async function GET() {
+	const unauthorized = await requireAdmin();
+	if (unauthorized) return unauthorized;
+
 	const data = await readStayData();
 	return NextResponse.json(data.bookingSync);
 }
 
 export async function PATCH(request: Request) {
+	const unauthorized = await requireAdmin();
+	if (unauthorized) return unauthorized;
+
 	const payload = bookingSyncSchema.safeParse(await request.json());
 
 	if (!payload.success) {

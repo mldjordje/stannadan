@@ -26,6 +26,7 @@ import {
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/EditOutlined';
 import AddIcon from '@mui/icons-material/Add';
+import UploadIcon from '@mui/icons-material/CloudUploadOutlined';
 import { Apartment } from '@/lib/stay/types';
 import { formatCurrency } from '@/lib/stay/format';
 
@@ -129,6 +130,7 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 	const [form, setForm] = useState<ApartmentFormState>(emptyForm);
 	const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 	const [saving, setSaving] = useState(false);
+	const [uploading, setUploading] = useState(false);
 
 	function openCreate() {
 		setForm(emptyForm);
@@ -142,6 +144,50 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 
 	function updateField<Key extends keyof ApartmentFormState>(key: Key, value: ApartmentFormState[Key]) {
 		setForm((current) => ({ ...current, [key]: value }));
+	}
+
+	async function uploadFile(file: File) {
+		const body = new FormData();
+		body.append('file', file);
+		const response = await fetch('/api/stay/uploads', { method: 'POST', body });
+
+		if (!response.ok) {
+			const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+			throw new Error(payload?.error || 'Slika nije uploadovana.');
+		}
+
+		return (await response.json()) as { url: string };
+	}
+
+	async function uploadCover(file?: File) {
+		if (!file) return;
+		setUploading(true);
+		setFeedback(null);
+
+		try {
+			const blob = await uploadFile(file);
+			updateField('coverImage', blob.url);
+		} catch (error) {
+			setFeedback({ type: 'error', message: (error as Error).message });
+		} finally {
+			setUploading(false);
+		}
+	}
+
+	async function uploadGallery(files: FileList | null) {
+		if (!files?.length) return;
+		setUploading(true);
+		setFeedback(null);
+
+		try {
+			const blobs = await Promise.all(Array.from(files).map(uploadFile));
+			const current = form.gallery.split(',').map((item) => item.trim()).filter(Boolean);
+			updateField('gallery', [...current, ...blobs.map((blob) => blob.url)].join(', '));
+		} catch (error) {
+			setFeedback({ type: 'error', message: (error as Error).message });
+		} finally {
+			setUploading(false);
+		}
 	}
 
 	async function saveApartment() {
@@ -280,6 +326,10 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 								onChange={(event) => updateField('coverImage', event.target.value)}
 								fullWidth
 							/>
+							<Button component="label" startIcon={<UploadIcon />} disabled={uploading} sx={{ mt: 1 }}>
+								{uploading ? 'Upload...' : 'Upload cover slike'}
+								<input hidden type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={(event) => uploadCover(event.target.files?.[0])} />
+							</Button>
 						</Grid>
 						<Grid size={{ xs: 12, md: 6 }}>
 							<TextField
@@ -296,6 +346,10 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 								onChange={(event) => updateField('gallery', event.target.value)}
 								fullWidth
 							/>
+							<Button component="label" startIcon={<UploadIcon />} disabled={uploading} sx={{ mt: 1 }}>
+								Dodaj slike u galeriju
+								<input hidden multiple type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={(event) => uploadGallery(event.target.files)} />
+							</Button>
 						</Grid>
 						<Grid size={{ xs: 6, md: 3 }}>
 							<TextField label="Gosti" type="number" value={form.guests} onChange={(event) => updateField('guests', event.target.value)} fullWidth />

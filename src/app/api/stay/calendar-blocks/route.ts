@@ -3,13 +3,20 @@ import { NextResponse } from 'next/server';
 import { calendarBlockSchema } from '@/lib/stay/schema';
 import { readStayData, updateStayData } from '@/lib/stay/store';
 import { CalendarBlock } from '@/lib/stay/types';
+import { requireAdmin } from '@/lib/auth/requireAdmin';
 
 export async function GET() {
+	const unauthorized = await requireAdmin();
+	if (unauthorized) return unauthorized;
+
 	const data = await readStayData();
 	return NextResponse.json(data.calendarBlocks);
 }
 
 export async function POST(request: Request) {
+	const unauthorized = await requireAdmin();
+	if (unauthorized) return unauthorized;
+
 	const payload = calendarBlockSchema.safeParse(await request.json());
 
 	if (!payload.success) {

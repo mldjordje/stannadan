@@ -2,8 +2,12 @@ import { randomUUID } from 'crypto';
 import { NextResponse } from 'next/server';
 import { parseIcsEvents } from '@/lib/stay/ical';
 import { updateStayData } from '@/lib/stay/store';
+import { requireAdmin } from '@/lib/auth/requireAdmin';
 
 export async function POST() {
+	const unauthorized = await requireAdmin();
+	if (unauthorized) return unauthorized;
+
 	const syncLogs: {
 		id: string;
 		status: 'success' | 'warning' | 'error';

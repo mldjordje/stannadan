@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { apartmentSchema } from '@/lib/stay/schema';
 import { readStayData, updateStayData } from '@/lib/stay/store';
+import { requireAdmin } from '@/lib/auth/requireAdmin';
 
 type Context = {
 	params: Promise<{
@@ -21,6 +22,9 @@ export async function GET(_: Request, context: Context) {
 }
 
 export async function PATCH(request: Request, context: Context) {
+	const unauthorized = await requireAdmin();
+	if (unauthorized) return unauthorized;
+
 	const { id } = await context.params;
 	const payload = apartmentSchema.partial().safeParse(await request.json());
 
@@ -69,6 +73,9 @@ export async function PATCH(request: Request, context: Context) {
 }
 
 export async function DELETE(_: Request, context: Context) {
+	const unauthorized = await requireAdmin();
+	if (unauthorized) return unauthorized;
+
 	const { id } = await context.params;
 	let removed = false;
 

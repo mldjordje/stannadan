@@ -14,10 +14,6 @@ function toAllDayStamp(value: string) {
 	return `${date.getUTCFullYear()}${pad(date.getUTCMonth() + 1)}${pad(date.getUTCDate())}`;
 }
 
-function escapeIcs(value: string) {
-	return value.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
-}
-
 export function buildApartmentIcs(apartment: Apartment, data: StayData) {
 	const reservations = data.reservations.filter(
 		(reservation) => reservation.apartmentId === apartment.id && reservation.status !== 'cancelled'
@@ -38,8 +34,8 @@ export function buildApartmentIcs(apartment: Apartment, data: StayData) {
 			`DTSTAMP:${toUtcStamp(new Date().toISOString())}`,
 			`DTSTART;VALUE=DATE:${toAllDayStamp(reservation.checkIn)}`,
 			`DTEND;VALUE=DATE:${toAllDayStamp(reservation.checkOut)}`,
-			`SUMMARY:${escapeIcs(`Reserved - ${reservation.guestName}`)}`,
-			`DESCRIPTION:${escapeIcs(`Source: ${reservation.source}; Status: ${reservation.status}`)}`,
+			'SUMMARY:Reserved',
+			'DESCRIPTION:Unavailable',
 			'END:VEVENT'
 		);
 	});
@@ -51,8 +47,8 @@ export function buildApartmentIcs(apartment: Apartment, data: StayData) {
 			`DTSTAMP:${toUtcStamp(new Date().toISOString())}`,
 			`DTSTART;VALUE=DATE:${toAllDayStamp(block.start)}`,
 			`DTEND;VALUE=DATE:${toAllDayStamp(block.end)}`,
-			`SUMMARY:${escapeIcs(block.title)}`,
-			`DESCRIPTION:${escapeIcs(block.notes || block.type)}`,
+			'SUMMARY:Unavailable',
+			'DESCRIPTION:Unavailable',
 			'END:VEVENT'
 		);
 	});

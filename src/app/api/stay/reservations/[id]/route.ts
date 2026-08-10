@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { reservationSchema } from '@/lib/stay/schema';
 import { readStayData, updateStayData } from '@/lib/stay/store';
+import { requireAdmin } from '@/lib/auth/requireAdmin';
 
 type Context = {
 	params: Promise<{
@@ -9,6 +10,9 @@ type Context = {
 };
 
 export async function GET(_: Request, context: Context) {
+	const unauthorized = await requireAdmin();
+	if (unauthorized) return unauthorized;
+
 	const { id } = await context.params;
 	const data = await readStayData();
 	const reservation = data.reservations.find((item) => item.id === id);
@@ -21,6 +25,9 @@ export async function GET(_: Request, context: Context) {
 }
 
 export async function PATCH(request: Request, context: Context) {
+	const unauthorized = await requireAdmin();
+	if (unauthorized) return unauthorized;
+
 	const { id } = await context.params;
 	const payload = reservationSchema.partial().safeParse(await request.json());
 
@@ -58,6 +65,9 @@ export async function PATCH(request: Request, context: Context) {
 }
 
 export async function DELETE(_: Request, context: Context) {
+	const unauthorized = await requireAdmin();
+	if (unauthorized) return unauthorized;
+
 	const { id } = await context.params;
 	let removed = false;
 

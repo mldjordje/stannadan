@@ -1,24 +1,8 @@
 import NextAuth from 'next-auth';
-import { User } from '@auth/user';
-import { createStorage } from 'unstorage';
-import memoryDriver from 'unstorage/drivers/memory';
-import vercelKVDriver from 'unstorage/drivers/vercel-kv';
-import { UnstorageAdapter } from '@auth/unstorage-adapter';
+import UserModel from '@auth/user/models/UserModel';
 import type { NextAuthConfig } from 'next-auth';
 import type { Provider } from 'next-auth/providers';
-import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
-import { authGetDbUserByEmail, authCreateDbUser } from './authApi';
-
-const storage = createStorage({
-	driver: process.env.VERCEL
-		? vercelKVDriver({
-				url: process.env.AUTH_KV_REST_API_URL,
-				token: process.env.AUTH_KV_REST_API_TOKEN,
-				env: false
-			})
-		: memoryDriver()
-});
 
 function resolveDefaultRoles(email?: string | null) {
 	const adminEmails = (process.env.AUTH_ADMIN_EMAILS || '')
@@ -30,47 +14,10 @@ function resolveDefaultRoles(email?: string | null) {
 	return adminEmails.includes(normalizedEmail) ? ['admin'] : ['customer'];
 }
 
-export const providers: Provider[] = [
-	Credentials({
-		authorize(formInput) {
-			/**
-			 * !! This is just for demonstration purposes
-			 * You can create your own validation logic here
-			 * !! Do not use this in production
-			 */
-
-			/**
-			 * Sign in
-			 */
-			if (formInput.formType === 'signin') {
-				if (formInput.password === '' || formInput.email !== 'admin@fusetheme.com') {
-					return null;
-				}
-			}
-
-			/**
-			 * Sign up
-			 */
-			if (formInput.formType === 'signup') {
-				if (formInput.password === '' || formInput.email === '') {
-					return null;
-				}
-			}
-
-			/**
-			 * Response Success with email
-			 */
-			return {
-				email: formInput?.email as string
-			};
-		}
-	}),
-	Google
-];
+export const providers: Provider[] = [Google];
 
 const config = {
 	theme: { logo: '/site-assets/images/logo/logo-white.png' },
-	adapter: UnstorageAdapter(storage),
 	pages: {
 		signIn: '/sign-in'
 	},
@@ -95,49 +42,22 @@ const config = {
 
 			return token;
 		},
-		async session({ session, token }) {
+		session({ session, token }) {
 			if (token.accessToken && typeof token.accessToken === 'string') {
 				session.accessToken = token.accessToken;
 			}
 
-			if (session) {
-				try {
-					/**
-					 * Get the session user from database
-					 */
-					const response = await authGetDbUserByEmail(session.user.email);
-
-					const userDbData = (await response.json()) as User;
-
-					session.db = userDbData;
-
-					return session;
-				} catch (error) {
-					const errorStatus = error?.status;
-
-					/** If user not found, create a new user */
-					if (errorStatus === 404) {
-						const newUserResponse = await authCreateDbUser({
-							email: session.user.email,
-							role: resolveDefaultRoles(session.user.email),
-							displayName: session.user.name,
-							photoURL: session.user.image
-						});
-
-						const newUser = (await newUserResponse.json()) as User;
-
-						console.error('Error fetching user data:', error);
-
-						session.db = newUser;
-
-						return session;
-					}
-
-					throw error;
-				}
+			if (session?.user) {
+				session.db = UserModel({
+					id: session.user.email || token.sub || '',
+					email: session.user.email || '',
+					role: resolveDefaultRoles(session.user.email),
+					displayName: session.user.name || session.user.email || '',
+					photoURL: session.user.image || ''
+				});
 			}
 
-			return null;
+			return session;
 		}
 	},
 	experimental: {
@@ -172,6 +92,6 @@ export const authJsProviderMap: AuthJsProvider[] = providers
 			}
 		};
 	})
-	.filter((provider) => provider.id !== 'credentials');
+	.filter(Boolean);
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);
