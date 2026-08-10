@@ -10,11 +10,19 @@ import type { Metadata } from 'next';
 import { auth } from '@auth/authJs';
 import App from './App';
 
+const siteUrl =
+	process.env.NEXT_PUBLIC_BASE_URL ||
+	(process.env.VERCEL_PROJECT_PRODUCTION_URL
+		? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+		: 'http://localhost:3100');
+
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
+	metadataBase: new URL(siteUrl),
 	title: 'Stan na Dan Niš | Apartmani u Nišu',
 	description: 'Pažljivo uređeni apartmani za udoban boravak u Nišu, uz direktan kontakt sa domaćinom.',
 	robots: 'follow, index',
+	alternates: { canonical: '/' },
 	icons: { icon: '/site-assets/images/logo/favicon.png' },
 	openGraph: {
 		title: 'Stan na Dan Niš | Apartmani u Nišu',
