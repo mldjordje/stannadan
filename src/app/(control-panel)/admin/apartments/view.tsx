@@ -27,6 +27,7 @@ import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/EditOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import UploadIcon from '@mui/icons-material/CloudUploadOutlined';
+import { upload } from '@vercel/blob/client';
 import { Apartment } from '@/lib/stay/types';
 import { formatCurrency } from '@/lib/stay/format';
 
@@ -147,20 +148,28 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 	}
 
 	async function uploadFile(file: File) {
-		const body = new FormData();
-		body.append('file', file);
-		const response = await fetch('/api/stay/uploads', { method: 'POST', body });
+		const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
 
-		if (!response.ok) {
-			const payload = (await response.json().catch(() => null)) as { error?: string } | null;
-			throw new Error(payload?.error || 'Slika nije uploadovana.');
+		if (!allowedTypes.includes(file.type)) {
+			throw new Error('Dozvoljeni formati su JPEG, PNG, WebP i AVIF.');
 		}
 
-		return (await response.json()) as { url: string };
+		if (file.size > 8 * 1024 * 1024) {
+			throw new Error('Slika mora biti manja od 8 MB.');
+		}
+
+		const safeName = file.name.toLowerCase().replace(/[^a-z0-9._-]+/g, '-');
+
+		return upload(`apartments/${safeName}`, file, {
+			access: 'public',
+			handleUploadUrl: '/api/stay/uploads',
+			contentType: file.type
+		});
 	}
 
 	async function uploadCover(file?: File) {
 		if (!file) return;
+
 		setUploading(true);
 		setFeedback(null);
 
@@ -176,6 +185,7 @@ function ApartmentsAdminView({ initialApartments }: ApartmentsAdminViewProps) {
 
 	async function uploadGallery(files: FileList | null) {
 		if (!files?.length) return;
+
 		setUploading(true);
 		setFeedback(null);
 
