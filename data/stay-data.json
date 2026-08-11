@@ -1,29 +1,29 @@
 {
   "property": {
-    "name": "Stan na Dan Nis",
-    "tagline": "Moderni apartmani u centru Nisa sa direktnom i Booking.com prodajom",
-    "city": "Nis",
-    "country": "Serbia",
-    "address": "Obrenoviceva 12, Medijana, Nis",
+    "name": "Stan na Dan Niš",
+    "tagline": "Tri uređena apartmana u centru Niša, sa direktnom rezervacijom bez provizije.",
+    "city": "Niš",
+    "country": "Srbija",
+    "address": "Obrenovićeva 12, Medijana, Niš",
     "phone": "+381 60 123 4567",
     "email": "rezervacije@stannadannis.rs",
     "googleMapsUrl": "https://maps.google.com/?q=Nis+Serbia",
     "heroImage": "/site-assets/images/custom/hero-main.jpeg",
-    "description": "Boutique kolekcija apartmana za kratkorocni najam u Nisu, optimizovana za direktne rezervacije, repeat goste i svakodnevno upravljanje dostupnoscu.",
+    "description": "Mala kolekcija apartmana za kratke boravke u centru Niša: samostalni check-in, kalendar koji je uvek tačan i rezervacija direktno kod domaćina.",
     "highlights": [
-      "Samostalno prijavljivanje i digitalna uputstva za goste",
-      "Interaktivni kalendar sa blokadama, ciscenjem i rezervacijama",
-      "Google prijava za goste i admin tim",
-      "Booking.com iCal import/export spreman za sinhronizaciju"
+      "Samostalni check-in i uputstva dan pre dolaska",
+      "Kalendar sa rezervacijama, čišćenjem i blokadama",
+      "Google prijava za goste i domaćina",
+      "Booking.com iCal sinhronizacija termina"
     ],
     "neighborhood": [
       {
-        "label": "Tvrdjava Nis",
-        "distance": "7 min peske"
+        "label": "Niška tvrđava",
+        "distance": "7 min peške"
       },
       {
-        "label": "Kazandzijsko sokace",
-        "distance": "4 min peske"
+        "label": "Kazandžijsko sokače",
+        "distance": "4 min peške"
       },
       {
         "label": "Aerodrom Konstantin Veliki",
@@ -36,8 +36,8 @@
       "id": "apt-fortress-loft",
       "slug": "fortress-loft",
       "name": "Fortress Loft",
-      "teaser": "Dizajniran studio za parove i poslovna putovanja blizu tvrdjave.",
-      "description": "Fortress Loft kombinuje topao boutique enterijer, radni kutak i brz pristup centru grada. Idealan je za goste koji zele samostalni check-in i tihu noc u centru Nisa.",
+      "teaser": "Studio za dvoje, na koraku od tvrđave i pešačke zone.",
+      "description": "Fortress Loft je studio od 32 m² sa toplim enterijerom, radnim kutkom i brzim izlaskom na korzo. Napravljen je za parove i poslovne dolaske: samostalni ulazak, tiha noć i centar grada pred vratima.",
       "coverImage": "/site-assets/images/custom/kitchen-tv.jpeg",
       "gallery": [
         "/site-assets/images/custom/kitchen-tv.jpeg",
@@ -53,7 +53,7 @@
       "rating": 4.95,
       "reviewCount": 124,
       "featured": true,
-      "locationNote": "Centar Nisa, 300m od pesacke zone",
+      "locationNote": "Centar Niša, 300 m od pešačke zone",
       "amenities": [
         "Self check-in",
         "Fast Wi-Fi",
@@ -64,16 +64,16 @@
       ],
       "rules": [
         "Check-in od 14:00",
-        "Nema pusenja",
-        "Mir posle 22h"
+        "Zabranjeno pušenje",
+        "Tišina posle 22h"
       ]
     },
     {
       "id": "apt-riverside-suite",
       "slug": "riverside-suite",
       "name": "Riverside Suite",
-      "teaser": "Komforan apartman sa balkonom za duze boravke i porodice.",
-      "description": "Riverside Suite ima odvojenu spavacu sobu, dnevni boravak i balkon. Podesen je za porodice, duze boravke i goste koji dolaze automobilom.",
+      "teaser": "Apartman sa balkonom i odvojenom spavaćom sobom, uz kej.",
+      "description": "Riverside Suite ima odvojenu spavaću sobu, dnevni boravak i balkon nad kejom. Radi odlično za porodice, duže boravke i goste koji dolaze kolima.",
       "coverImage": "/site-assets/images/custom/living-room.jpeg",
       "gallery": [
         "/site-assets/images/custom/living-room.jpeg",
@@ -101,7 +101,7 @@
       ],
       "rules": [
         "Check-in od 14:00",
-        "Dozvoljeni kucni ljubimci uz najavu",
+        "Ljubimci uz najavu",
         "Zabave nisu dozvoljene"
       ]
     },
@@ -109,8 +109,8 @@
       "id": "apt-delta-family",
       "slug": "delta-family-suite",
       "name": "Delta Family Suite",
-      "teaser": "Veliki apartman za porodice i manje grupe sa tri odvojena kreveta.",
-      "description": "Delta Family Suite je fleksibilan smestaj za duze gradske posete, sa tri kreveta, kuhinjom i privatnim parking mestom. Dobro radi za porodicne rezervacije i goste sa decom.",
+      "teaser": "Porodični apartman sa tri kreveta i svojim parking mestom.",
+      "description": "Delta Family Suite je najveći u kolekciji: tri kreveta, puna kuhinja, dva kupatila i privatno parking mesto. Prilagođen je porodicama i manjim grupama koje ostaju duže.",
       "coverImage": "/site-assets/images/custom/hero-main.jpeg",
       "gallery": [
         "/site-assets/images/custom/hero-main.jpeg",
@@ -126,7 +126,7 @@
       "rating": 4.91,
       "reviewCount": 63,
       "featured": false,
-      "locationNote": "Blizu Delte, dobar pristup autoputu",
+      "locationNote": "Blizu Delte, lak izlaz na autoput",
       "amenities": [
         "Self check-in",
         "Parking",
@@ -138,8 +138,8 @@
       ],
       "rules": [
         "Check-in od 15:00",
-        "Nema pusenja",
-        "Tihi ulaz u zgradu"
+        "Zabranjeno pušenje",
+        "Tih ulazak u zgradu"
       ]
     }
   ],
@@ -171,7 +171,7 @@
       "totalPrice": 304,
       "source": "booking.com",
       "status": "confirmed",
-      "notes": "Booking.com guest, trazen parking.",
+      "notes": "Booking.com guest, tražen parking.",
       "createdAt": "2026-03-26T09:00:00.000Z"
     },
     {
@@ -186,7 +186,7 @@
       "totalPrice": 398,
       "source": "direct",
       "status": "pending",
-      "notes": "Ceka potvrdu za raniji check-in.",
+      "notes": "Čeka potvrdu za raniji check-in.",
       "createdAt": "2026-03-26T09:00:00.000Z"
     }
   ],
@@ -215,7 +215,7 @@
     "state": "needs-setup",
     "propertyId": "nis-city-apartments",
     "docsUrl": "https://developers.booking.com/",
-    "notes": "Podesi import URL za svaki apartman da bi se Booking.com rezervacije automatski povlacile. Export linkove iz ove aplikacije mozes uneti u Booking.com kalendar ako nalog podrzava iCal sync.",
+    "notes": "Podesi import URL za svaki apartman da bi se Booking.com rezervacije automatski povlačile. Export linkove iz ove aplikacije možeš uneti u Booking.com kalendar ako nalog podržava iCal sync.",
     "lastSyncAt": null,
     "mappings": [
       {
@@ -241,7 +241,7 @@
       {
         "id": "sync-1",
         "status": "warning",
-        "message": "Booking.com import URL jos nije dodat ni za jedan apartman.",
+        "message": "Booking.com import URL još nije dodat ni za jedan apartman.",
         "createdAt": "2026-03-26T09:00:00.000Z"
       }
     ]

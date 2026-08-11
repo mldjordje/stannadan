@@ -1,83 +1,113 @@
 import Link from 'next/link';
 import { PropertyProfile } from '@/lib/stay/types';
+import Reveal from './Reveal';
 
 type SiteFooterProps = {
 	property: PropertyProfile;
 };
 
 function SiteFooter({ property }: SiteFooterProps) {
+	const year = new Date().getFullYear();
+
 	return (
-		<footer className="footer position-relative overflow-hidden site-footer">
-			<div className="container">
-				<div className="row gy-5 tw-pt-18 tw-pb-10">
-					<div className="col-lg-5">
-						<p className="text-uppercase text-main-600 tw-text-sm fw-semibold mb-3">Stan na dan Nis</p>
-						<h2 className="cursor-text tw-text-12 fw-normal text-white tw-mb-5">
-							Brzo upravljanje rezervacijama i moderan boravak u centru grada.
-						</h2>
-						<p className="text-white-50 tw-text-lg mb-0">{property.description}</p>
-					</div>
-					<div className="col-md-4 col-lg-3">
-						<h4 className="tw-text-505 fw-normal text-white tw-mb-6">Kontakt</h4>
-						<ul className="d-flex flex-column tw-gap-4">
+		<footer className="snd-foot">
+			<div className="snd-wrap">
+				<div className="snd-foot-top">
+					<Reveal className="snd-foot-brand">
+						<span className="word">
+							Stan <span className="snd-gold">&#183;</span> na <span className="snd-gold">&#183;</span> Dan
+						</span>
+						<p className="snd-body">{property.description}</p>
+						<div className="snd-chips">
+							<a
+								href={`tel:${property.phone}`}
+								className="snd-chip"
+							>
+								{property.phone}
+							</a>
+							<a
+								href={`mailto:${property.email}`}
+								className="snd-chip"
+							>
+								Pošalji mejl
+							</a>
+						</div>
+					</Reveal>
+
+					<Reveal
+						className="snd-foot-col"
+						delay={1}
+					>
+						<h5>Stranice</h5>
+						<ul>
 							<li>
-								<Link href={`tel:${property.phone}`} className="text-white hover-text-main-600">
-									{property.phone}
-								</Link>
+								<Link href="/apartments">Apartmani</Link>
 							</li>
 							<li>
-								<Link href={`mailto:${property.email}`} className="text-white hover-text-main-600">
-									{property.email}
-								</Link>
+								<Link href="/availability">Dostupnost</Link>
 							</li>
 							<li>
-								<Link href={property.googleMapsUrl} className="text-white hover-text-main-600" target="_blank">
+								<Link href="/contact">Kontakt</Link>
+							</li>
+							<li>
+								<Link href="/account">Moj nalog</Link>
+							</li>
+						</ul>
+					</Reveal>
+
+					<Reveal
+						className="snd-foot-col"
+						delay={2}
+					>
+						<h5>Kontakt</h5>
+						<ul>
+							<li>
+								<a href={`tel:${property.phone}`}>{property.phone}</a>
+							</li>
+							<li>
+								<a href={`mailto:${property.email}`}>{property.email}</a>
+							</li>
+							<li>
+								<a
+									href={property.googleMapsUrl}
+									target="_blank"
+									rel="noreferrer"
+								>
 									{property.address}
-								</Link>
+								</a>
 							</li>
 						</ul>
-					</div>
-					<div className="col-md-4 col-lg-2">
-						<h4 className="tw-text-505 fw-normal text-white tw-mb-6">Navigacija</h4>
-						<ul className="d-flex flex-column tw-gap-4">
-							<li>
-								<Link href="/apartments" className="text-white hover-text-main-600">
-									Apartmani
-								</Link>
-							</li>
-							<li>
-								<Link href="/availability" className="text-white hover-text-main-600">
-									Dostupnost
-								</Link>
-							</li>
-							<li>
-								<Link href="/account" className="text-white hover-text-main-600">
-									Moj nalog
-								</Link>
-							</li>
-							<li>
-								<Link href="/admin" className="text-white hover-text-main-600">
-									Admin
-								</Link>
-							</li>
-						</ul>
-					</div>
-					<div className="col-md-4 col-lg-2">
-						<h4 className="tw-text-505 fw-normal text-white tw-mb-6">U blizini</h4>
-						<ul className="d-flex flex-column tw-gap-4">
+					</Reveal>
+
+					<Reveal
+						className="snd-foot-col"
+						delay={3}
+					>
+						<h5>U blizini</h5>
+						<ul>
 							{property.neighborhood.map((item) => (
-								<li key={item.label} className="text-white-50">
-									<span className="d-block text-white">{item.label}</span>
-									<span>{item.distance}</span>
+								<li key={item.label}>
+									{item.label}
+									<span className="sub">{item.distance}</span>
 								</li>
 							))}
 						</ul>
-					</div>
+					</Reveal>
 				</div>
-				<div className="border-top border-white border-opacity-10 py-4 d-flex justify-content-between gap-3 flex-wrap">
-					<p className="mb-0 text-white-50">Direktne rezervacije, Booking.com sync i Google prijava u jednoj Next.js aplikaciji.</p>
-					<Link href="/sign-in" className="text-main-600">
-						Prijava i nalog
+
+				<div className="snd-foot-bot">
+					<span>
+						&#169; {year} {property.name}
+					</span>
+					<span className="snd-it" style={{ letterSpacing: 0, textTransform: 'none', fontSize: 14 }}>
+						{property.city}, {property.country}
+					</span>
+					<Link
+						href="/sign-in"
+						className="snd-tlink"
+					>
+						<span>Prijava</span>
+						<span className="snd-arr" />
 					</Link>
 				</div>
 			</div>

@@ -1,5 +1,9 @@
-import Image from 'next/image';
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { AnimatePresence, motion } from 'motion/react';
+import { useEffect, useState } from 'react';
 import { PropertyProfile, UserRole } from '@/lib/stay/types';
 
 type SiteHeaderProps = {
@@ -9,64 +13,143 @@ type SiteHeaderProps = {
 };
 
 const navigationItems = [
-	{ href: '/', label: 'Pocetna' },
+	{ href: '/', label: 'Početna' },
 	{ href: '/apartments', label: 'Apartmani' },
 	{ href: '/availability', label: 'Dostupnost' },
 	{ href: '/contact', label: 'Kontakt' }
 ];
 
 function SiteHeader({ property, userName, roles = [] }: SiteHeaderProps) {
+	const pathname = usePathname();
+	const [scrolled, setScrolled] = useState(false);
+	const [menuOpen, setMenuOpen] = useState(false);
+
 	const isAdmin = roles.includes('admin');
 	const primaryHref = userName ? (isAdmin ? '/admin' : '/account') : '/sign-in';
-	const primaryLabel = userName ? (isAdmin ? 'Admin panel' : 'Moj nalog') : 'Google prijava';
+	const primaryLabel = userName ? (isAdmin ? 'Admin' : 'Nalog') : 'Prijava';
+
+	useEffect(() => {
+		function onScroll() {
+			setScrolled(window.scrollY > 40);
+		}
+
+		onScroll();
+		window.addEventListener('scroll', onScroll, { passive: true });
+
+		return () => window.removeEventListener('scroll', onScroll);
+	}, []);
+
+	useEffect(() => {
+		setMenuOpen(false);
+	}, [pathname]);
+
+	useEffect(() => {
+		document.body.style.overflow = menuOpen ? 'hidden' : '';
+
+		return () => {
+			document.body.style.overflow = '';
+		};
+	}, [menuOpen]);
 
 	return (
-		<header className="header tw-transition-all tw-z-99 header-transparent fixed-header">
-			<div className="container tw-container-1750-px">
-				<nav className="d-flex align-items-center justify-content-between position-relative py-3">
-					<div className="logo">
-						<Link href="/" className="link d-flex align-items-center gap-3">
-							<Image
-								src="/site-assets/images/logo/logo-white.png"
-								alt={property.name}
-								width={180}
-								height={54}
-								className="max-w-200-px"
-							/>
-							<span className="text-white font-heading tw-text-lg d-none d-lg-inline">{property.city}</span>
-						</Link>
-					</div>
-					<div className="d-none d-lg-block">
-						<ul className="nav-menu d-flex align-items-center tw-gap-8">
-							{navigationItems.map((item) => (
-								<li key={item.href} className="nav-menu__item">
-									<Link href={item.href} className="nav-menu__link text-white font-heading tw-py-11 fw-normal">
-										{item.label}
-									</Link>
-								</li>
-							))}
-						</ul>
-					</div>
-					<div className="d-flex align-items-center tw-gap-4">
-						{userName ? (
-							<div className="d-none d-md-flex align-items-center tw-gap-3 rounded-pill border border-white border-opacity-25 px-3 py-2">
-								<span className="tw-text-sm text-white-50">Prijavljen</span>
-								<span className="font-heading text-white">{userName}</span>
-							</div>
-						) : null}
+		<>
+			<header className={`snd-nav${scrolled ? ' is-scrolled' : ''}`}>
+				<Link
+					href="/"
+					className="snd-brand"
+					aria-label={property.name}
+				>
+					<span className="snd-monogram">S&#183;D</span>
+					<span className="snd-wordmark">
+						Stan<span className="dot"> &#183; </span>na<span className="dot"> &#183; </span>Dan
+					</span>
+				</Link>
+
+				<nav className="snd-menu">
+					{navigationItems.map((item) => (
 						<Link
-							href={primaryHref}
-							className="tw-btn-hover-yellow bg-white tw-py-4 tw-px-7 text-uppercase text-heading font-heading d-inline-flex align-items-center tw-gap-2 tw-rounded-lg"
+							key={item.href}
+							href={item.href}
+							className={pathname === item.href ? 'is-active' : undefined}
 						>
-							{primaryLabel}
-							<span className="d-inline-block lh-1 tw-text-lg">
-								<i className="ph ph-arrow-up-right" />
-							</span>
+							{item.label}
 						</Link>
-					</div>
+					))}
 				</nav>
-			</div>
-		</header>
+
+				<div className="snd-nav-right">
+					{userName ? (
+						<span className="snd-nav-user">
+							<b>{userName.split(' ')[0]}</b>
+						</span>
+					) : null}
+					<Link
+						href={primaryHref}
+						className="snd-btn"
+					>
+						<span>{primaryLabel}</span>
+						<span className="snd-arr" />
+					</Link>
+					<button
+						type="button"
+						className={`snd-burger${menuOpen ? ' is-open' : ''}`}
+						onClick={() => setMenuOpen((open) => !open)}
+						aria-label="Meni"
+						aria-expanded={menuOpen}
+					>
+						<span />
+						<span />
+						<span />
+					</button>
+				</div>
+			</header>
+
+			<AnimatePresence>
+				{menuOpen ? (
+					<motion.div
+						className="snd-drawer"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 0.4 }}
+					>
+						{navigationItems.map((item, index) => (
+							<motion.div
+								key={item.href}
+								initial={{ opacity: 0, y: 18 }}
+								animate={{ opacity: 1, y: 0 }}
+								transition={{ delay: 0.06 * index + 0.05, duration: 0.5, ease: [0.2, 0.7, 0.2, 1] }}
+							>
+								<Link href={item.href}>
+									{item.label}
+									<span className="idx">{String(index + 1).padStart(2, '0')}</span>
+								</Link>
+							</motion.div>
+						))}
+						<motion.div
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{ delay: 0.3 }}
+							style={{ marginTop: 28, display: 'flex', gap: 14, flexWrap: 'wrap' }}
+						>
+							<Link
+								href={primaryHref}
+								className="snd-btn"
+							>
+								<span>{primaryLabel}</span>
+								<span className="snd-arr" />
+							</Link>
+							<a
+								href={`tel:${property.phone}`}
+								className="snd-btn"
+							>
+								<span>{property.phone}</span>
+							</a>
+						</motion.div>
+					</motion.div>
+				) : null}
+			</AnimatePresence>
+		</>
 	);
 }
 
