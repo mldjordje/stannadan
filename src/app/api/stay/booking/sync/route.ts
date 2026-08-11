@@ -1,13 +1,10 @@
 import { randomUUID } from 'crypto';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { parseIcsEvents } from '@/lib/stay/ical';
 import { updateStayData } from '@/lib/stay/store';
 import { requireAdmin } from '@/lib/auth/requireAdmin';
 
-export async function POST() {
-	const unauthorized = await requireAdmin();
-	if (unauthorized) return unauthorized;
-
+async function runSync() {
 	const syncLogs: {
 		id: string;
 		status: 'success' | 'warning' | 'error';
@@ -16,7 +13,6 @@ export async function POST() {
 	}[] = [];
 
 	await updateStayData(async (data) => {
-		const bookingReservations = data.reservations.filter((reservation) => reservation.source === 'booking.com');
 		const preservedReservations = data.reservations.filter((reservation) => reservation.source !== 'booking.com');
 		const importedReservations = [];
 
@@ -91,11 +87,33 @@ export async function POST() {
 		};
 	});
 
-	return NextResponse.json({
+	return {
 		success: true,
 		message:
 			syncLogs.length > 0
 				? syncLogs[0].message
 				: `Nema import URL-ova. Postavi Booking.com iCal link pre prve sinhronizacije.`
-	});
+	};
+}
+
+/** Manual trigger from the admin panel. */
+export async function POST() {
+	const unauthorized = await requireAdmin();
+	if (unauthorized) return unauthorized;
+
+	return NextResponse.json(await runSync());
+}
+
+/**
+ * Vercel Cron hits this on schedule (see vercel.json). Vercel signs cron
+ * requests with `Authorization: Bearer $CRON_SECRET` automatically.
+ */
+export async function GET(request: NextRequest) {
+	const authHeader = request.headers.get('authorization');
+
+	if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+	}
+
+	return NextResponse.json(await runSync());
 }

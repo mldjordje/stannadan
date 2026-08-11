@@ -1,0 +1,8 @@
+{
+	"crons": [
+		{
+			"path": "/api/stay/booking/sync",
+			"schedule": "0 * * * *"
+		}
+	]
+}
