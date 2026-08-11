@@ -29,6 +29,7 @@ _archived*/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production.local.disabled
 .eslintcache
 
 /.idea
@@ -65,3 +66,5 @@ amplifytools.xcconfig
 
 # local netlify folder
 .netlify
+
+.vercel

@@ -1,0 +1,155 @@
+.shell {
+  min-height: 100svh;
+  background: #f2f0eb;
+  color: #111312;
+}
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 20;
+  display: none;
+  width: 17.5rem;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid #d6d2c8;
+  background: #111312;
+  color: #f4f1e9;
+  padding: 2rem 1.4rem;
+}
+.wordmark {
+  color: inherit;
+  font-family: var(--site-font-display, Georgia, serif);
+  font-size: 1.8rem;
+  line-height: 1;
+  text-decoration: none;
+}
+.caption {
+  margin: 0.7rem 0 0;
+  color: #a7aaa7;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.navigation {
+  display: grid;
+  gap: 0.25rem;
+  margin-block: 3rem auto;
+}
+.navigation a {
+  display: grid;
+  min-height: 3.25rem;
+  grid-template-columns: 2rem 1fr;
+  align-items: center;
+  border-left: 2px solid transparent;
+  color: #aaadaa;
+  font-size: 0.9rem;
+  text-decoration: none;
+  padding: 0.6rem 0.8rem;
+}
+.navigation a span {
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+}
+.navigation a[data-active] {
+  border-color: #315cf0;
+  color: #fff;
+  background: #1b1e1c;
+}
+.navigation a:focus-visible,
+.sidebarFooter a:focus-visible,
+.sidebarFooter button:focus-visible,
+.mobileNav a:focus-visible,
+.siteLink:focus-visible {
+  outline: 2px solid #315cf0;
+  outline-offset: 3px;
+}
+.sidebarFooter {
+  display: grid;
+  gap: 0.5rem;
+  border-top: 1px solid #333634;
+  padding-top: 1rem;
+}
+.sidebarFooter a,
+.sidebarFooter button {
+  min-height: 2.75rem;
+  border: 0;
+  background: transparent;
+  color: #d7d7d3;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  padding: 0.7rem 0.4rem;
+  cursor: pointer;
+}
+.content {
+  min-width: 0;
+  min-height: 100svh;
+  padding: 5.5rem 0.9rem 6.5rem;
+}
+.mobileHeader {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 30;
+  display: flex;
+  min-height: 4.25rem;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #2f322f;
+  background: #111312;
+  color: #f4f1e9;
+  padding: 0.8rem 1rem;
+}
+.mobileHeader .wordmark {
+  font-size: 1.35rem;
+}
+.siteLink {
+  color: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.mobileNav {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid #d6d2c8;
+  background: #faf8f3;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.mobileNav a {
+  display: grid;
+  min-height: 4.25rem;
+  place-items: center;
+  gap: 0.15rem;
+  color: #62655f;
+  font-size: 0.58rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+}
+.mobileNav a span {
+  font-size: 0.55rem;
+  font-weight: 500;
+}
+.mobileNav a[data-active] {
+  color: #173fc6;
+  box-shadow: inset 0 2px #315cf0;
+}
+@media (min-width: 64rem) {
+  .sidebar {
+    display: flex;
+  }
+  .mobileHeader,
+  .mobileNav {
+    display: none;
+  }
+  .content {
+    margin-left: 17.5rem;
+    padding: 2rem clamp(1.5rem, 4vw, 4rem) 4rem;
+  }
+}

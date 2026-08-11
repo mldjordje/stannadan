@@ -1,0 +1,111 @@
+.editor {
+  display: grid;
+  gap: 1rem;
+}
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.top p {
+  max-width: 34rem;
+  margin: 0;
+  color: #696b65;
+  font-size: 0.82rem;
+}
+.upload {
+  display: inline-flex;
+  min-height: 2.8rem;
+  flex: 0 0 auto;
+  align-items: center;
+  border: 1px solid #111312;
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  padding: 0.7rem 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 0.75rem;
+}
+.item {
+  min-width: 0;
+  border: 1px solid #d3cfc5;
+  background: #faf9f6;
+}
+.preview {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: #ddd9d0;
+}
+.preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.preview span {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  background: #315cf0;
+  color: #fff;
+  font-size: 0.58rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.45rem;
+  text-transform: uppercase;
+}
+.controls {
+  display: grid;
+  grid-template-columns: 2.8rem 2.8rem 1fr 1fr;
+}
+.controls button {
+  min-height: 2.8rem;
+  border: 0;
+  border-right: 1px solid #d3cfc5;
+  background: transparent;
+  color: #111312;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.controls button:last-child {
+  border-right: 0;
+  color: #9e2424;
+}
+.controls button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.controls button:focus-visible,
+.upload:focus-within {
+  outline: 2px solid #315cf0;
+  outline-offset: 2px;
+}
+.empty {
+  border: 1px dashed #aaa69d;
+  margin: 0;
+  color: #696b65;
+  padding: 2rem;
+  text-align: center;
+}
+@media (max-width: 47.99rem) {
+  .top {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .upload {
+    justify-content: center;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .controls button {
+    min-height: 3rem;
+  }
+}

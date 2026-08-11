@@ -106,8 +106,16 @@
 
 .fullWidth,
 .summary,
-.status {
+.status,
+.calendarField {
   grid-column: 1 / -1;
+}
+
+.calendarField {
+  display: grid;
+  justify-items: center;
+  border-bottom: 1px solid rgb(9 11 13 / 25%);
+  padding-bottom: clamp(1.5rem, 4vw, 2.5rem);
 }
 
 .summary {

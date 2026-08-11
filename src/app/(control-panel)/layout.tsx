@@ -1,10 +1,10 @@
-import MainLayout from 'src/components/MainLayout';
 import AuthGuardRedirect from '@auth/AuthGuardRedirect';
+import AdminShell from '@/components/admin/AdminShell';
 
 function Layout({ children }) {
 	return (
 		<AuthGuardRedirect auth={['admin']}>
-			<MainLayout>{children}</MainLayout>
+			<AdminShell>{children}</AdminShell>
 		</AuthGuardRedirect>
 	);
 }

@@ -1,163 +1,109 @@
 .calendar {
-	padding-block: clamp(2.75rem, 6vw, 5rem);
+  width: min(100%, 72rem);
+  margin: 0 auto;
+  padding-block: clamp(2.75rem, 6vw, 5rem);
 }
 .header {
-	display: flex;
-	align-items: end;
-	justify-content: space-between;
-	gap: 2rem;
-	margin-bottom: clamp(2rem, 5vw, 4rem);
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
 }
 .eyebrow,
 .apartmentSelect span {
-	margin: 0 0 0.7rem;
-	color: var(--site-smoke);
-	font-size: 0.66rem;
-	font-weight: 700;
-	letter-spacing: 0.14em;
-	text-transform: uppercase;
+  margin: 0 0 0.7rem;
+  color: var(--site-smoke);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 .header h2 {
-	max-width: 11ch;
-	margin: 0;
-	font-size: clamp(2.7rem, 6vw, 5.5rem);
+  max-width: 10ch;
+  margin: 0;
+  font-size: clamp(2.7rem, 6vw, 5rem);
 }
 .apartmentSelect {
-	display: grid;
-	min-width: min(100%, 18rem);
+  display: grid;
+  min-width: min(100%, 18rem);
 }
 .apartmentSelect select {
-	min-height: 48px;
-	border: 0;
-	border-bottom: 1px solid var(--site-line);
-	border-radius: 0;
-	background: transparent;
-	color: var(--site-bone);
-	font: inherit;
+  min-height: 48px;
+  border: 0;
+  border-bottom: 1px solid var(--site-line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--site-bone);
+  font: inherit;
 }
 .apartmentSelect option {
-	background: var(--site-ink);
+  background: var(--site-ink);
 }
-.monthNavigation {
-	display: grid;
-	grid-template-columns: 48px 1fr 48px;
-	align-items: center;
-	border-block: 1px solid var(--site-line);
+.calendarFrame {
+  display: grid;
+  justify-items: center;
 }
-.monthNavigation p {
-	margin: 0;
-	text-align: center;
-	font-family: var(--site-font-display);
-	font-size: clamp(1.7rem, 4vw, 3rem);
-	text-transform: capitalize;
+.continue {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: 43rem;
+  margin: 1.5rem auto 0;
+  border-top: 1px solid var(--site-line);
+  padding-top: 1rem;
 }
-.monthNavigation button {
-	width: 48px;
-	height: 48px;
-	border: 0;
-	background: transparent;
-	color: var(--site-bone);
-	font-size: 1.2rem;
-	cursor: pointer;
+.continue div {
+  display: grid;
+  gap: 0.25rem;
 }
-.weekdays,
-.grid {
-	display: grid;
-	grid-template-columns: repeat(7, minmax(0, 1fr));
+.continue div span {
+  color: var(--site-smoke);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
-.weekdays span {
-	padding: 1.25rem 0.5rem 0.75rem;
-	color: var(--site-smoke);
-	font-size: 0.62rem;
-	font-weight: 700;
-	letter-spacing: 0.12em;
-	text-align: center;
-	text-transform: uppercase;
+.continue strong {
+  font-weight: 600;
 }
-.day {
-	position: relative;
-	min-height: clamp(5rem, 9vw, 8rem);
-	padding: 0.8rem;
-	border-top: 1px solid var(--site-line);
-	border-left: 1px solid var(--site-line);
+.continue a,
+.disabled {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  border: 1px solid var(--site-bone);
+  color: var(--site-bone);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.09em;
+  padding: 0.7rem 1rem;
+  text-decoration: none;
+  text-transform: uppercase;
 }
-.day:nth-child(7n) {
-	border-right: 1px solid var(--site-line);
+.continue a:focus-visible {
+  outline: 2px solid var(--site-cobalt);
+  outline-offset: 3px;
 }
-.day:nth-last-child(-n + 7) {
-	border-bottom: 1px solid var(--site-line);
-}
-.day[data-outside] {
-	opacity: 0.62;
-}
-.day[data-unavailable] {
-	background: color-mix(in srgb, var(--site-bone) 9%, transparent);
-}
-.day[data-unavailable]::after {
-	position: absolute;
-	inset: auto 0.8rem 0.8rem;
-	height: 2px;
-	background: var(--site-cobalt);
-	content: '';
-}
-.dayNumber {
-	font-family: var(--site-font-display);
-	font-size: clamp(1.35rem, 2.5vw, 2rem);
-}
-.status {
-	display: block;
-	margin-top: 1rem;
-	color: var(--site-smoke);
-	font-size: 0.58rem;
-	font-weight: 700;
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
-}
-.legend {
-	display: flex;
-	gap: 2rem;
-	padding-top: 1.25rem;
-	color: var(--site-smoke);
-	font-size: 0.72rem;
-}
-.legend span {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.55rem;
-}
-.legend i {
-	display: block;
-	width: 1.5rem;
-	height: 2px;
-	background: var(--site-line);
-}
-.legend i[data-state='unavailable'] {
-	background: var(--site-cobalt);
+.disabled {
+  opacity: 0.38;
 }
 .empty {
-	padding: 3rem 0;
-	color: var(--site-smoke);
+  padding: 3rem 0;
+  color: var(--site-smoke);
 }
 @media (max-width: 47.99rem) {
-	.header {
-		align-items: stretch;
-		flex-direction: column;
-	}
-	.apartmentSelect {
-		width: 100%;
-	}
-	.weekdays span {
-		padding-inline: 0.1rem;
-		font-size: 0.55rem;
-	}
-	.day {
-		min-height: 4.25rem;
-		padding: 0.45rem;
-	}
-	.status {
-		display: none;
-	}
-	.day[data-unavailable]::after {
-		inset: auto 0.45rem 0.45rem;
-	}
+  .header,
+  .continue {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .apartmentSelect {
+    width: 100%;
+  }
+  .continue a,
+  .disabled {
+    justify-content: center;
+    width: 100%;
+  }
 }

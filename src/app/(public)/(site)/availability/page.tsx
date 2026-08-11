@@ -31,7 +31,11 @@ export default async function AvailabilityPage() {
 			description="Izaberite apartman i proverite slobodne dane. Domaćin potvrđuje tačnu dostupnost nakon slanja upita."
 		>
 			<PublicAvailabilityCalendar
-				apartments={data.apartments.map(({ id, name }) => ({ id, name }))}
+				apartments={data.apartments.map(({ id, name, slug }) => ({
+					id,
+					name,
+					slug
+				}))}
 				unavailableRanges={unavailableRanges}
 			/>
 

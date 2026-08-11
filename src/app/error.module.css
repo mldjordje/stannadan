@@ -1,0 +1,56 @@
+.page {
+  display: grid;
+  min-height: 100svh;
+  place-content: center;
+  gap: 1rem;
+  background: #111312;
+  color: #f5f1e8;
+  padding: 2rem;
+}
+.page p {
+  margin: 0;
+  color: #315cf0;
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.page h1 {
+  max-width: 9ch;
+  margin: 0;
+  font-family: var(--site-font-display, Georgia, serif);
+  font-size: clamp(3.5rem, 11vw, 8rem);
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 0.9;
+}
+.page span {
+  color: #a8aaa5;
+}
+.page div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.page button,
+.page a {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  border: 1px solid #f5f1e8;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  padding: 0.8rem 1rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.page button {
+  border-color: #315cf0;
+  background: #315cf0;
+}

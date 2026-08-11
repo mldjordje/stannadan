@@ -11,6 +11,7 @@ type ApartmentDetailsPageProps = {
 	params: Promise<{
 		slug: string;
 	}>;
+	searchParams: Promise<{ checkIn?: string; checkOut?: string }>;
 };
 
 const amenityLabels: Record<StayAmenity, string> = {
@@ -31,14 +32,34 @@ function formatRule(rule: string) {
 	return rule.replace('pusenja', 'pušenja').replace('kucni', 'kućni');
 }
 
-export default async function ApartmentDetailsPage({ params }: ApartmentDetailsPageProps) {
+export default async function ApartmentDetailsPage({ params, searchParams }: ApartmentDetailsPageProps) {
 	const { slug } = await params;
+	const requestedDates = await searchParams;
 	const data = await readStayData();
 	const apartment = data.apartments.find((item) => item.slug === slug);
 
 	if (!apartment) {
 		notFound();
 	}
+
+	const unavailableRanges = [
+		...data.reservations
+			.filter((reservation) => reservation.apartmentId === apartment.id && reservation.status !== 'cancelled')
+			.map((reservation) => ({
+				id: reservation.id,
+				apartmentId: apartment.id,
+				start: reservation.checkIn,
+				end: reservation.checkOut
+			})),
+		...data.calendarBlocks
+			.filter((block) => block.apartmentId === apartment.id)
+			.map((block) => ({
+				id: block.id,
+				apartmentId: apartment.id,
+				start: block.start,
+				end: block.end
+			}))
+	];
 
 	return (
 		<article className={styles.page}>
@@ -139,6 +160,7 @@ export default async function ApartmentDetailsPage({ params }: ApartmentDetailsP
 			</section>
 
 			<section
+				id="booking"
 				className={styles.booking}
 				aria-labelledby="booking-title"
 			>
@@ -148,7 +170,12 @@ export default async function ApartmentDetailsPage({ params }: ApartmentDetailsP
 						<h2 id="booking-title">Pošaljite upit za svoj termin.</h2>
 						<p>Unesite datume i kontakt. Odgovor o terminu dobićete direktno od domaćina.</p>
 					</header>
-					<BookingRequestForm apartment={apartment} />
+					<BookingRequestForm
+						apartment={apartment}
+						unavailableRanges={unavailableRanges}
+						initialCheckIn={requestedDates.checkIn}
+						initialCheckOut={requestedDates.checkOut}
+					/>
 				</div>
 			</section>
 		</article>

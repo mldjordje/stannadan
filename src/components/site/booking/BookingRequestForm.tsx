@@ -1,45 +1,61 @@
 'use client';
 
 import { useState } from 'react';
+import AvailabilityRangeCalendar from '@/components/site/availability/AvailabilityRangeCalendar';
+import { rangeIsAvailable, type PublicUnavailableRange } from '@/components/site/availability/calendar';
 import { calculateReservationTotal, formatCurrency, getNights } from '@/lib/stay/format';
 import type { Apartment } from '@/lib/stay/types';
 import styles from './BookingRequestForm.module.css';
 
-type BookingRequestFormProps = {
+type Props = {
 	apartment: Apartment;
+	unavailableRanges: PublicUnavailableRange[];
+	initialCheckIn?: string;
+	initialCheckOut?: string;
 };
-
-const initialState = {
+const baseState = {
 	guestName: '',
 	guestEmail: '',
 	guestPhone: '',
-	checkIn: '',
-	checkOut: '',
 	guests: '2',
 	notes: ''
 };
 
-function BookingRequestForm({ apartment }: BookingRequestFormProps) {
-	const [form, setForm] = useState(initialState);
+export default function BookingRequestForm({
+	apartment,
+	unavailableRanges,
+	initialCheckIn = '',
+	initialCheckOut = ''
+}: Props) {
+	const validInitial = rangeIsAvailable(initialCheckIn, initialCheckOut, unavailableRanges);
+	const [form, setForm] = useState({
+		...baseState,
+		checkIn: validInitial ? initialCheckIn : '',
+		checkOut: validInitial ? initialCheckOut : ''
+	});
 	const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 	const [message, setMessage] = useState('');
-
 	const nights = form.checkIn && form.checkOut ? getNights(form.checkIn, form.checkOut) : 0;
 	const total =
 		nights > 0 ? calculateReservationTotal(apartment, form.checkIn, form.checkOut) : apartment.pricePerNight;
 	const fieldId = (name: string) => `booking-${apartment.id}-${name}`;
+	const minDate = new Date().toISOString().slice(0, 10);
 
 	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
-		setStatus('loading');
 		setMessage('');
 
+		if (!rangeIsAvailable(form.checkIn, form.checkOut, unavailableRanges)) {
+			setStatus('error');
+			setMessage('Izaberite slobodan datum dolaska i odlaska u kalendaru.');
+			return;
+		}
+
+		setStatus('loading');
 		try {
 			const response = await fetch('/api/stay/reservations', {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
+				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					apartmentId: apartment.id,
 					guestName: form.guestName,
@@ -56,16 +72,27 @@ function BookingRequestForm({ apartment }: BookingRequestFormProps) {
 			});
 
 			if (!response.ok) {
-				throw new Error('Rezervacija nije sačuvana.');
+				const result = (await response.json().catch(() => null)) as {
+					error?: string;
+				} | null;
+				throw new Error(
+					response.status === 409
+						? 'Termin je upravo zauzet. Izaberite drugi period.'
+						: result?.error || 'Rezervacija nije sačuvana.'
+				);
 			}
 
 			setStatus('success');
 			setMessage('Upit je sačuvan. Domaćin će potvrditi termin i poslati detalje na email.');
-			setForm(initialState);
+			setForm({ ...baseState, checkIn: '', checkOut: '' });
 		} catch (error) {
 			setStatus('error');
 			setMessage((error as Error).message);
 		}
+	}
+
+	function update(key: keyof typeof form, value: string) {
+		setForm((current) => ({ ...current, [key]: value }));
 	}
 
 	return (
@@ -80,116 +107,85 @@ function BookingRequestForm({ apartment }: BookingRequestFormProps) {
 					<span>Čišćenje {formatCurrency(apartment.cleaningFee)}</span>
 				</div>
 			</header>
-
 			<form
 				className={styles.form}
 				onSubmit={handleSubmit}
 				aria-busy={status === 'loading'}
 			>
-				<div className={styles.field}>
-					<label htmlFor={fieldId('guestName')}>Ime i prezime</label>
-					<input
-						id={fieldId('guestName')}
-						value={form.guestName}
-						onChange={(event) =>
-							setForm((current) => ({
-								...current,
-								guestName: event.target.value
-							}))
-						}
-						placeholder="Vaše ime i prezime"
-						required
+				<div className={styles.calendarField}>
+					<AvailabilityRangeCalendar
+						ranges={unavailableRanges}
+						checkIn={form.checkIn}
+						checkOut={form.checkOut}
+						onChange={(range) => setForm((current) => ({ ...current, ...range }))}
+						label={`Izbor datuma za ${apartment.name}`}
 					/>
 				</div>
-
-				<div className={styles.field}>
-					<label htmlFor={fieldId('guestEmail')}>Email</label>
-					<input
-						id={fieldId('guestEmail')}
-						type="email"
-						value={form.guestEmail}
-						onChange={(event) =>
-							setForm((current) => ({
-								...current,
-								guestEmail: event.target.value
-							}))
-						}
-						placeholder="ime@primer.rs"
-						required
-					/>
-				</div>
-
-				<div className={styles.field}>
-					<label htmlFor={fieldId('guestPhone')}>Telefon</label>
-					<input
-						id={fieldId('guestPhone')}
-						value={form.guestPhone}
-						onChange={(event) =>
-							setForm((current) => ({
-								...current,
-								guestPhone: event.target.value
-							}))
-						}
-						placeholder="+381 60 000 0000"
-						required
-					/>
-				</div>
-
-				<div className={styles.field}>
-					<label htmlFor={fieldId('guests')}>Broj gostiju</label>
-					<input
-						id={fieldId('guests')}
-						type="number"
-						min={1}
-						max={apartment.guests}
-						value={form.guests}
-						onChange={(event) => setForm((current) => ({ ...current, guests: event.target.value }))}
-						required
-					/>
-				</div>
-
-				<div className={styles.field}>
-					<label htmlFor={fieldId('checkIn')}>Dolazak</label>
-					<input
-						id={fieldId('checkIn')}
-						type="date"
-						value={form.checkIn}
-						onChange={(event) =>
-							setForm((current) => ({
-								...current,
-								checkIn: event.target.value
-							}))
-						}
-						required
-					/>
-				</div>
-
-				<div className={styles.field}>
-					<label htmlFor={fieldId('checkOut')}>Odlazak</label>
-					<input
-						id={fieldId('checkOut')}
-						type="date"
-						value={form.checkOut}
-						onChange={(event) =>
-							setForm((current) => ({
-								...current,
-								checkOut: event.target.value
-							}))
-						}
-						required
-					/>
-				</div>
-
-				<div className={`${styles.field} ${styles.fullWidth}`}>
-					<label htmlFor={fieldId('notes')}>Napomena</label>
+				<Field
+					id={fieldId('guestName')}
+					label="Ime i prezime"
+					value={form.guestName}
+					onChange={(value) => update('guestName', value)}
+					placeholder="Vaše ime i prezime"
+					required
+				/>
+				<Field
+					id={fieldId('guestEmail')}
+					label="Email"
+					type="email"
+					value={form.guestEmail}
+					onChange={(value) => update('guestEmail', value)}
+					placeholder="ime@primer.rs"
+					required
+				/>
+				<Field
+					id={fieldId('guestPhone')}
+					label="Telefon"
+					value={form.guestPhone}
+					onChange={(value) => update('guestPhone', value)}
+					placeholder="+381 60 000 0000"
+					required
+				/>
+				<Field
+					id={fieldId('guests')}
+					label="Broj gostiju"
+					type="number"
+					min="1"
+					max={String(apartment.guests)}
+					value={form.guests}
+					onChange={(value) => update('guests', value)}
+					required
+				/>
+				<Field
+					id={fieldId('checkIn')}
+					label="Dolazak"
+					type="date"
+					min={minDate}
+					value={form.checkIn}
+					onChange={(value) => {
+						update('checkIn', value);
+						update('checkOut', '');
+					}}
+					required
+				/>
+				<Field
+					id={fieldId('checkOut')}
+					label="Odlazak"
+					type="date"
+					min={form.checkIn || minDate}
+					value={form.checkOut}
+					onChange={(value) => update('checkOut', value)}
+					required
+				/>
+				<label className={`${styles.field} ${styles.fullWidth}`}>
+					<span>Napomena</span>
 					<textarea
 						id={fieldId('notes')}
 						value={form.notes}
-						onChange={(event) => setForm((current) => ({ ...current, notes: event.target.value }))}
+						onChange={(event) => update('notes', event.target.value)}
 						placeholder="Dolazak, parking ili posebna napomena"
 					/>
-				</div>
-
+				</label>
 				<div className={styles.summary}>
 					<div>
 						<p>Procena ukupno: {formatCurrency(total)}</p>
@@ -199,10 +195,9 @@ function BookingRequestForm({ apartment }: BookingRequestFormProps) {
 						type="submit"
 						disabled={status === 'loading'}
 					>
-						{status === 'loading' ? 'Slanje...' : 'Pošalji upit'}
+						{status === 'loading' ? 'Slanje…' : 'Pošalji upit'}
 					</button>
 				</div>
-
 				<div
 					className={styles.status}
 					aria-live="polite"
@@ -215,4 +210,43 @@ function BookingRequestForm({ apartment }: BookingRequestFormProps) {
 	);
 }
 
-export default BookingRequestForm;
+function Field({
+	id,
+	label,
+	value,
+	onChange,
+	type = 'text',
+	placeholder,
+	required,
+	min,
+	max
+}: {
+	id: string;
+	label: string;
+	value: string;
+	onChange: (value: string) => void;
+	type?: string;
+	placeholder?: string;
+	required?: boolean;
+	min?: string;
+	max?: string;
+}) {
+	return (
+		<label
+			className={styles.field}
+			htmlFor={id}
+		>
+			<span>{label}</span>
+			<input
+				id={id}
+				type={type}
+				value={value}
+				onChange={(event) => onChange(event.target.value)}
+				placeholder={placeholder}
+				required={required}
+				min={min}
+				max={max}
+			/>
+		</label>
+	);
+}
