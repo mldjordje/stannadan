@@ -20,6 +20,14 @@ type Props = {
 };
 const weekdays = ['Pon', 'Uto', 'Sre', 'Čet', 'Pet', 'Sub', 'Ned'];
 
+function formatSelectionDate(iso: string) {
+	if (!iso) return 'Izaberite datum';
+
+	return new Intl.DateTimeFormat('sr-Latn-RS', { weekday: 'short', day: 'numeric', month: 'short' }).format(
+		new Date(`${iso}T12:00:00`)
+	);
+}
+
 export default function AvailabilityRangeCalendar({
 	ranges,
 	checkIn,
@@ -35,11 +43,16 @@ export default function AvailabilityRangeCalendar({
 		checkIn && checkOut ? `Izabrano: ${checkIn} — ${checkOut}` : 'Prvo izaberite dolazak, zatim odlazak.'
 	);
 	const cells = useMemo(() => buildCalendarCells(month), [month]);
-	const monthLabel = new Intl.DateTimeFormat('sr-Latn-RS', {
-		month: 'long',
-		year: 'numeric'
-	}).format(month);
+	const monthLabel = new Intl.DateTimeFormat('sr-Latn-RS', { month: 'long', year: 'numeric' }).format(month);
 	const today = todayIso();
+	const activeCheckIn = anchor ?? checkIn;
+	const selectionComplete = Boolean(checkIn && checkOut && !anchor);
+
+	function reset() {
+		setAnchor(null);
+		onChange({ checkIn: '', checkOut: '' });
+		setMessage('Prvo izaberite dolazak, zatim odlazak.');
+	}
 
 	function select(iso: string, unavailable: boolean, inMonth: boolean) {
 		if (!inMonth || unavailable || iso < today) return;
@@ -74,6 +87,38 @@ export default function AvailabilityRangeCalendar({
 			data-tone={tone}
 			aria-label={label}
 		>
+			<div className={styles.selectionHeader}>
+				<div
+					className={styles.selectionStep}
+					data-active={!selectionComplete || undefined}
+				>
+					<span>Dolazak</span>
+					<strong>{formatSelectionDate(activeCheckIn)}</strong>
+				</div>
+				<span
+					className={styles.selectionArrow}
+					aria-hidden="true"
+				>
+					→
+				</span>
+				<div
+					className={styles.selectionStep}
+					data-active={Boolean(activeCheckIn && !selectionComplete) || undefined}
+					data-complete={selectionComplete || undefined}
+				>
+					<span>Odlazak</span>
+					<strong>{formatSelectionDate(checkOut)}</strong>
+				</div>
+				{activeCheckIn ? (
+					<button
+						className={styles.reset}
+						type="button"
+						onClick={reset}
+					>
+						Poništi
+					</button>
+				) : null}
+			</div>
 			<div className={styles.nav}>
 				<button
 					type="button"
@@ -107,8 +152,8 @@ export default function AvailabilityRangeCalendar({
 				{cells.map((cell) => {
 					const unavailable = dateIsUnavailable(cell.iso, ranges);
 					const disabled = !cell.inCurrentMonth || unavailable || cell.iso < today;
-					const start = cell.iso === (anchor ?? checkIn);
-					const end = !anchor && Boolean(checkOut) && cell.iso === checkOut;
+					const start = cell.iso === activeCheckIn;
+					const end = selectionComplete && cell.iso === checkOut;
 					const inRange = Boolean(checkIn && checkOut && cell.iso > checkIn && cell.iso < checkOut);
 					return (
 						<button
@@ -124,6 +169,7 @@ export default function AvailabilityRangeCalendar({
 							data-range={inRange || undefined}
 							data-today={cell.iso === today || undefined}
 							onClick={() => select(cell.iso, unavailable, cell.inCurrentMonth)}
+							aria-selected={start || end || inRange}
 							aria-label={`${cell.iso}, ${unavailable ? 'zauzeto' : disabled ? 'nije dostupno' : 'slobodno'}`}
 						>
 							<span>{cell.date.getDate()}</span>
@@ -134,8 +180,10 @@ export default function AvailabilityRangeCalendar({
 			<p
 				className={styles.message}
 				data-error={message.includes('zauzetih') || undefined}
+				data-complete={selectionComplete || undefined}
 				aria-live="polite"
 			>
+				<span aria-hidden="true">{selectionComplete ? '✓' : activeCheckIn ? '02' : '01'}</span>
 				{message}
 			</p>
 			<div className={styles.legend}>

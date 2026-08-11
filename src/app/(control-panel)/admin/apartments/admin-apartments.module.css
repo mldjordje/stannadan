@@ -287,15 +287,72 @@
   }
 }
 @media (max-width: 47.99rem) {
+  .page {
+    margin-inline: -0.1rem;
+  }
   .listHeader,
   .editorHeader {
     align-items: stretch;
     flex-direction: column;
-    gap: 1.3rem;
+    gap: 1rem;
+    padding: 0.75rem 0 1.25rem;
+  }
+  .listHeader h1,
+  .editorHeader h1 {
+    font-size: clamp(2.75rem, 13vw, 4.25rem);
+    line-height: 0.92;
+  }
+  .listHeader p:not(.eyebrow) {
+    margin-top: 0.65rem;
+    font-size: 0.9rem;
+    line-height: 1.45;
   }
   .listHeader > .primary,
   .editorHeader > .primary {
     width: 100%;
+    min-height: 3.5rem;
+    border-radius: 0.8rem;
+  }
+  .cards {
+    gap: 1.25rem;
+    padding-block: 1rem 2rem;
+  }
+  .card {
+    border: 0;
+    border-radius: 1.35rem;
+    box-shadow: 0 10px 34px rgb(17 19 18 / 9%);
+  }
+  .cover {
+    min-height: 14rem;
+  }
+  .cover span {
+    top: 0.75rem;
+    left: 0.75rem;
+    border-radius: 999px;
+    background: rgb(17 19 18 / 88%);
+    padding: 0.5rem 0.7rem;
+    backdrop-filter: blur(8px);
+  }
+  .cardBody {
+    gap: 1rem;
+    padding: 1.15rem;
+  }
+  .cardBody h2 {
+    font-size: clamp(2.25rem, 11vw, 3.3rem);
+  }
+  .cardBody dl {
+    overflow: hidden;
+    border: 0;
+    border-radius: 0.8rem;
+    background: #f3f1ec;
+    font-size: 0.82rem;
+  }
+  .cardBody dl div {
+    padding: 0.85rem 0.65rem;
+    border-right: 1px solid #ddd9d0;
+  }
+  .cardBody dl div:last-child {
+    border: 0;
   }
   .fields {
     grid-template-columns: 1fr;
@@ -306,11 +363,72 @@
   .actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
   }
   .actions .primary {
     grid-column: 1/-1;
+    grid-row: 1;
   }
-  .cardBody dl {
-    font-size: 0.82rem;
+  .actions a,
+  .actions button {
+    min-height: 3.35rem;
+    border-radius: 0.75rem;
+  }
+  .editorGrid {
+    counter-reset: admin-section;
+    gap: 0.85rem;
+    padding: 0.85rem 0 10rem;
+  }
+  .formSection {
+    counter-increment: admin-section;
+    border: 0;
+    border-radius: 1.15rem;
+    box-shadow: 0 7px 24px rgb(17 19 18 / 7%);
+    padding: 1.15rem;
+  }
+  .formSection h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 1.1rem;
+    font-size: 1.75rem;
+  }
+  .formSection h2::before {
+    content: counter(admin-section, decimal-leading-zero);
+    display: grid;
+    width: 2.25rem;
+    height: 2.25rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 50%;
+    background: #e9edfc;
+    color: #315cf0;
+    font-family: var(--site-font-ui, Arial, sans-serif);
+    font-size: 0.62rem;
+    font-weight: 800;
+  }
+  .fields input,
+  .fields textarea,
+  .fieldsSmall input {
+    min-height: 3.5rem;
+    border-radius: 0.7rem;
+    background: #f7f6f2;
+    font-size: 1rem;
+  }
+  .stickyActions {
+    right: 0.65rem;
+    bottom: calc(4.25rem + env(safe-area-inset-bottom));
+    left: 0.65rem;
+    border: 1px solid #d6d2c8;
+    border-radius: 1rem;
+    background: rgb(250 248 243 / 96%);
+    box-shadow: 0 12px 32px rgb(17 19 18 / 18%);
+    padding: 0.6rem;
+    backdrop-filter: blur(10px);
+  }
+  .stickyActions > * {
+    min-height: 3.25rem;
+    flex: 1;
+    border-radius: 0.7rem;
   }
 }
