@@ -23,7 +23,7 @@
   margin: 0;
   color: var(--site-cobalt);
   font-family: var(--site-font-display);
-  font-size: clamp(5rem, 20vw, 10rem);
+  font-size: clamp(3.25rem, 12vw, 6rem);
   letter-spacing: -0.06em;
   line-height: 0.65;
 }
@@ -48,7 +48,7 @@
   max-width: 9ch;
   margin: 0 0 1.5rem;
   color: var(--site-ink);
-  font-size: clamp(3.5rem, 14vw, 7rem);
+  font-size: clamp(2.75rem, 9vw, 4.5rem);
 }
 
 .location {
@@ -148,7 +148,7 @@
     top: clamp(3rem, 7vw, 6rem);
     left: 0;
     z-index: 1;
-    font-size: clamp(7rem, 11vw, 12rem);
+    font-size: clamp(3.5rem, 7vw, 6.5rem);
     mix-blend-mode: normal;
   }
 

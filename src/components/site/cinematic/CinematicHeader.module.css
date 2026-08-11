@@ -225,7 +225,7 @@
 	align-items: baseline;
 	border-bottom: 1px solid rgb(9 11 13 / 22%);
 	font-family: var(--site-font-display);
-	font-size: clamp(3.25rem, 8.5vw, 8.5rem);
+	font-size: clamp(2.75rem, 6vw, 5.5rem);
 	letter-spacing: -0.045em;
 	line-height: 0.9;
 	text-decoration: none;
@@ -342,7 +342,7 @@
 
 	.sheetLink {
 		grid-template-columns: 1.8rem minmax(0, 1fr);
-		font-size: clamp(3rem, 16vw, 5.75rem);
+		font-size: clamp(2.5rem, 11vw, 4.25rem);
 	}
 
 	.sheetAside {

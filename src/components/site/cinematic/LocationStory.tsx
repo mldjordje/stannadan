@@ -51,23 +51,6 @@ export function LocationStory({ property, neighborhood, image }: LocationStoryPr
 							decoding="async"
 						/>
 					</picture>
-					<svg
-						className={styles.route}
-						viewBox="0 0 500 300"
-						aria-hidden="true"
-					>
-						<path d="M15 248C96 195 92 92 180 104c69 9 65 87 138 73 57-11 71-96 168-151" />
-						<circle
-							cx="15"
-							cy="248"
-							r="5"
-						/>
-						<circle
-							cx="486"
-							cy="26"
-							r="5"
-						/>
-					</svg>
 				</figure>
 			</div>
 

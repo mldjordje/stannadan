@@ -33,7 +33,7 @@
 .copy h2 {
 	margin-bottom: clamp(3rem, 7vw, 7rem);
 	color: var(--site-ink);
-	font-size: clamp(5rem, 11vw, 12rem);
+	font-size: clamp(3rem, 7vw, 5.5rem);
 }
 
 .copy h2 em {
@@ -81,18 +81,6 @@
 	filter: saturate(0.8) contrast(1.04);
 }
 
-.route {
-	position: absolute;
-	right: 7%;
-	bottom: 8%;
-	width: 70%;
-	fill: var(--site-cobalt);
-	stroke: var(--site-bone);
-	stroke-dasharray: 7 9;
-	stroke-linecap: round;
-	stroke-width: 2;
-}
-
 .contact {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -138,7 +126,7 @@
 
 	.copy h2 {
 		margin-bottom: 2.5rem;
-		font-size: clamp(4.2rem, 22vw, 7rem);
+		font-size: clamp(2.5rem, 13vw, 4rem);
 	}
 
 	.media {

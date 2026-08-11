@@ -10,7 +10,7 @@
 	--site-radius-small: 0.35rem;
 	--site-font-display: var(--font-instrument), Georgia, serif;
 	--site-font-ui: Geist, Arial, sans-serif;
-	--site-display-size: clamp(3.25rem, 10vw, 9rem);
+	--site-display-size: clamp(2.75rem, 7vw, 5.5rem);
 	--site-safe-top: env(safe-area-inset-top, 0px);
 	--site-safe-right: env(safe-area-inset-right, 0px);
 	--site-safe-bottom: env(safe-area-inset-bottom, 0px);

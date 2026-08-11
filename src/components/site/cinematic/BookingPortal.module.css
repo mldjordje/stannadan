@@ -15,7 +15,7 @@
 	max-width: 10ch;
 	margin: clamp(2rem, 5vw, 4rem) 0 2rem;
 	color: #fff;
-	font-size: clamp(4.3rem, 9vw, 10rem);
+	font-size: clamp(3rem, 6vw, 6rem);
 }
 
 .copy > p:last-child {
@@ -115,7 +115,7 @@
 
 	.copy h2,
 	.section > h2 {
-		font-size: clamp(3.6rem, 18vw, 5.5rem);
+		font-size: clamp(2.5rem, 11vw, 4rem);
 	}
 
 	.form {

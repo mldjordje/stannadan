@@ -24,7 +24,7 @@
 .heading h2 {
 	max-width: 11ch;
 	margin: 0;
-	font-size: clamp(3.5rem, 8vw, 8.5rem);
+	font-size: clamp(2.75rem, 5vw, 5rem);
 }
 
 .details {
@@ -99,7 +99,7 @@
 .fact p {
 	margin: clamp(1.5rem, 4vw, 3rem) 0 0;
 	font-family: var(--site-font-display);
-	font-size: clamp(5rem, 12vw, 13rem);
+	font-size: clamp(3.25rem, 7vw, 6.5rem);
 	letter-spacing: -0.055em;
 	line-height: 0.8;
 }
@@ -125,7 +125,7 @@
 	}
 
 	.heading h2 {
-		font-size: clamp(3.2rem, 16vw, 5rem);
+		font-size: clamp(2.5rem, 10vw, 3.75rem);
 	}
 
 	.details {
@@ -150,6 +150,6 @@
 	}
 
 	.fact p {
-		font-size: clamp(4.5rem, 25vw, 8rem);
+		font-size: clamp(2.75rem, 14vw, 4.5rem);
 	}
 }

@@ -48,7 +48,7 @@
 .heading {
 	max-width: 11ch;
 	margin: 0;
-	font-size: clamp(4rem, 9vw, 8.75rem);
+	font-size: clamp(3rem, 6vw, 5.5rem);
 }
 
 .description {
@@ -147,7 +147,7 @@
 	margin: 0 0 1rem;
 	color: var(--site-cobalt);
 	font-family: var(--site-font-display);
-	font-size: clamp(3.5rem, 8vw, 6.5rem);
+	font-size: clamp(2.75rem, 5vw, 4.5rem);
 	letter-spacing: -0.05em;
 	line-height: 0.75;
 }
@@ -265,7 +265,7 @@
 	}
 
 	.heading {
-		font-size: clamp(3.35rem, 17vw, 5.25rem);
+		font-size: clamp(2.75rem, 12vw, 4rem);
 	}
 
 	.main :global([data-public-record]),
