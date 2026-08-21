@@ -54,6 +54,21 @@ async function ensureDatabaseSchema() {
 	await schemaPromise;
 }
 
+/**
+ * Records saved before the user management feature do not carry a `users` array,
+ * so every read is normalized to keep the rest of the app free of null checks.
+ */
+function normalizeStayData(data: StayData | undefined | null): StayData {
+	if (!data) {
+		return defaultStayData;
+	}
+
+	return {
+		...data,
+		users: Array.isArray(data.users) ? data.users : []
+	};
+}
+
 async function ensureDataFile() {
 	await mkdir(path.dirname(dataFilePath), { recursive: true });
 
@@ -77,7 +92,7 @@ async function readFileData() {
 	await ensureDataFile();
 	const file = await readFile(dataFilePath, 'utf-8');
 
-	return JSON.parse(file) as StayData;
+	return normalizeStayData(JSON.parse(file) as StayData);
 }
 
 export async function readStayData(): Promise<StayData> {
@@ -90,7 +105,7 @@ export async function readStayData(): Promise<StayData> {
 	await ensureDatabaseSchema();
 	const rows = (await sql`SELECT data FROM stay_state WHERE id = 'main'`) as { data: StayData }[];
 
-	return rows[0]?.data || defaultStayData;
+	return normalizeStayData(rows[0]?.data);
 }
 
 export async function writeStayData(data: StayData) {
@@ -136,7 +151,7 @@ export async function updateStayData(updater: (data: StayData) => StayData | Pro
 			throw new Error('Stay data has not been initialized.');
 		}
 
-		const next = await updater(current.data);
+		const next = await updater(normalizeStayData(current.data));
 		const result = await sql.query(
 			`UPDATE stay_state
 			 SET data = $1::jsonb, version = version + 1, updated_at = now()

@@ -10,11 +10,7 @@ import type { Metadata } from 'next';
 import { auth } from '@auth/authJs';
 import App from './App';
 
-const siteUrl =
-	process.env.NEXT_PUBLIC_BASE_URL ||
-	(process.env.VERCEL_PROJECT_PRODUCTION_URL
-		? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-		: 'http://localhost:3100');
+import { siteUrl } from '@/lib/site';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {

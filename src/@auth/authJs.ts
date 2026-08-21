@@ -3,7 +3,7 @@ import UserModel from '@auth/user/models/UserModel';
 import type { NextAuthConfig } from 'next-auth';
 import type { Provider } from 'next-auth/providers';
 import Google from 'next-auth/providers/google';
-import { resolveDefaultRoles } from './access';
+import { resolveStayAccess } from './access';
 
 const googleConfigured = Boolean(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET);
 
@@ -35,17 +35,19 @@ const config = {
 
 			return token;
 		},
-		session({ session, token }) {
+		async session({ session, token }) {
 			if (token.accessToken && typeof token.accessToken === 'string') {
 				session.accessToken = token.accessToken;
 			}
 
 			if (session?.user) {
+				const access = await resolveStayAccess(session.user.email);
+
 				session.db = UserModel({
 					id: session.user.email || token.sub || '',
 					email: session.user.email || '',
-					role: resolveDefaultRoles(session.user.email),
-					displayName: session.user.name || session.user.email || '',
+					role: access.roles,
+					displayName: access.user?.displayName || session.user.name || session.user.email || '',
 					photoURL: session.user.image || ''
 				});
 			}

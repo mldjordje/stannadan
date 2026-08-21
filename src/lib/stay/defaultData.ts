@@ -174,6 +174,7 @@ export const defaultStayData: StayData = {
 			notes: 'Privatni boravak vlasnika.'
 		}
 	],
+	users: [],
 	bookingSync: {
 		mode: 'ical',
 		state: 'needs-setup',

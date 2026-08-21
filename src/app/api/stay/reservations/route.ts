@@ -4,11 +4,14 @@ import { calculateReservationTotal } from '@/lib/stay/format';
 import { reservationSchema } from '@/lib/stay/schema';
 import { readStayData, updateStayData } from '@/lib/stay/store';
 import { Reservation } from '@/lib/stay/types';
-import { isAdminSession, requireAdmin } from '@/lib/auth/requireAdmin';
+import { canManageApartment, getAdminContext, requirePanelUser } from '@/lib/auth/requireAdmin';
 
 export async function GET(request: Request) {
-	const unauthorized = await requireAdmin();
-	if (unauthorized) return unauthorized;
+	const guard = await requirePanelUser();
+
+	if ('response' in guard) {
+		return guard.response;
+	}
 
 	const url = new URL(request.url);
 	const apartmentId = url.searchParams.get('apartmentId');
@@ -18,6 +21,10 @@ export async function GET(request: Request) {
 	const data = await readStayData();
 
 	const reservations = data.reservations.filter((reservation) => {
+		if (!canManageApartment(guard.context, reservation.apartmentId)) {
+			return false;
+		}
+
 		if (apartmentId && reservation.apartmentId !== apartmentId) {
 			return false;
 		}
@@ -70,15 +77,19 @@ export async function POST(request: Request) {
 				reservation.status !== 'cancelled' &&
 				overlaps(reservation.checkIn, reservation.checkOut)
 		) ||
-		data.calendarBlocks.some(
-			(block) => block.apartmentId === apartment.id && overlaps(block.start, block.end)
-		);
+		data.calendarBlocks.some((block) => block.apartmentId === apartment.id && overlaps(block.start, block.end));
 
 	if (unavailable) {
 		return NextResponse.json({ error: 'Apartment is not available for the selected dates.' }, { status: 409 });
 	}
 
-	const admin = await isAdminSession();
+	const context = await getAdminContext();
+
+	if (context && !canManageApartment(context, payload.data.apartmentId)) {
+		return NextResponse.json({ error: 'Nemas pristup ovom apartmanu.' }, { status: 403 });
+	}
+
+	const admin = Boolean(context);
 	const reservationData = payload.data as Omit<Reservation, 'id' | 'createdAt' | 'totalPrice'> & {
 		totalPrice?: number;
 	};

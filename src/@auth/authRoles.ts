@@ -8,6 +8,11 @@ const authRoles = {
 	admin: ['admin'],
 
 	/**
+	 * The owner role grants access to apartment owners and to full admins.
+	 */
+	owner: ['admin', 'owner'],
+
+	/**
 	 * The staff role grants access to users with the 'admin' or 'staff' role.
 	 */
 	staff: ['admin', 'staff'],

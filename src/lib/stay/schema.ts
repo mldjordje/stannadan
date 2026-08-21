@@ -44,6 +44,18 @@ export const calendarBlockSchema = z.object({
 	notes: z.string().optional().default('')
 });
 
+export const stayUserSchema = z.object({
+	email: z
+		.string()
+		.email()
+		.transform((value) => value.trim().toLowerCase()),
+	displayName: z.string().min(2),
+	role: z.enum(['admin', 'owner']),
+	apartmentIds: z.array(z.string().min(1)).default([]),
+	status: z.enum(['active', 'disabled']).default('active'),
+	notes: z.string().optional().default('')
+});
+
 export const bookingSyncSchema = z.object({
 	mode: z.enum(['ical', 'connectivity-api']),
 	state: z.enum(['needs-setup', 'configured', 'attention']),

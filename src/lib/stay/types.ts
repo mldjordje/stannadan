@@ -1,4 +1,21 @@
-export type UserRole = 'admin' | 'customer';
+export type UserRole = 'admin' | 'owner' | 'customer';
+
+export type StayUserRole = 'admin' | 'owner';
+
+export type StayUserStatus = 'active' | 'disabled';
+
+export type StayUser = {
+	id: string;
+	email: string;
+	displayName: string;
+	role: StayUserRole;
+	/** Apartments an owner may manage. Ignored for the admin role, which always covers every apartment. */
+	apartmentIds: string[];
+	status: StayUserStatus;
+	notes?: string;
+	createdAt: string;
+	createdBy?: string;
+};
 
 export type BookingSource = 'direct' | 'booking.com' | 'manual';
 
@@ -122,6 +139,7 @@ export type StayData = {
 	reservations: Reservation[];
 	calendarBlocks: CalendarBlock[];
 	bookingSync: BookingSyncConfig;
+	users: StayUser[];
 };
 
 export type CalendarEventRecord = {

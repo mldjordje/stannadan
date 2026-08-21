@@ -1,16 +1,16 @@
 import { redirect } from 'next/navigation';
-import ChannelSyncAdminView from './view';
+import { ADMIN_EMAILS } from '@auth/access';
 import { getAdminContext } from '@/lib/auth/requireAdmin';
 import { readStayData } from '@/lib/stay/store';
+import UsersAdminView from './view';
 
-export default async function AdminChannelSyncPage() {
+export default async function AdminUsersPage() {
 	const context = await getAdminContext();
 
 	if (!context) {
 		redirect('/sign-in');
 	}
 
-	// The channel configuration is property wide, so only full admins may open it.
 	if (context.role !== 'admin') {
 		redirect('/admin');
 	}
@@ -18,9 +18,11 @@ export default async function AdminChannelSyncPage() {
 	const data = await readStayData();
 
 	return (
-		<ChannelSyncAdminView
+		<UsersAdminView
+			currentEmail={context.email}
 			initialApartments={data.apartments}
-			initialSync={data.bookingSync}
+			initialUsers={data.users}
+			superAdminEmails={[...ADMIN_EMAILS]}
 		/>
 	);
 }

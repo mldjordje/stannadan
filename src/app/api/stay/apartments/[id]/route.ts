@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { apartmentSchema } from '@/lib/stay/schema';
 import { readStayData, updateStayData } from '@/lib/stay/store';
-import { requireAdmin } from '@/lib/auth/requireAdmin';
+import { canManageApartment, requirePanelUser } from '@/lib/auth/requireAdmin';
+import { invalidateAccessCache } from '@auth/access';
 import { deleteManagedBlobUrls } from '@/lib/stay/blob';
 
 type Context = {
@@ -23,11 +24,18 @@ export async function GET(_: Request, context: Context) {
 }
 
 export async function PATCH(request: Request, context: Context) {
-	const unauthorized = await requireAdmin();
+	const guard = await requirePanelUser();
 
-	if (unauthorized) return unauthorized;
+	if ('response' in guard) {
+		return guard.response;
+	}
 
 	const { id } = await context.params;
+
+	if (!canManageApartment(guard.context, id)) {
+		return NextResponse.json({ error: 'Nemas pristup ovom apartmanu.' }, { status: 403 });
+	}
+
 	const payload = apartmentSchema.partial().safeParse(await request.json());
 
 	if (!payload.success) {
@@ -88,11 +96,18 @@ export async function PATCH(request: Request, context: Context) {
 }
 
 export async function DELETE(_: Request, context: Context) {
-	const unauthorized = await requireAdmin();
+	const guard = await requirePanelUser();
 
-	if (unauthorized) return unauthorized;
+	if ('response' in guard) {
+		return guard.response;
+	}
 
 	const { id } = await context.params;
+
+	if (!canManageApartment(guard.context, id)) {
+		return NextResponse.json({ error: 'Nemas pristup ovom apartmanu.' }, { status: 403 });
+	}
+
 	let removed = false;
 	let removedImages: string[] = [];
 
@@ -107,6 +122,10 @@ export async function DELETE(_: Request, context: Context) {
 			apartments: nextApartments,
 			reservations: data.reservations.filter((reservation) => reservation.apartmentId !== id),
 			calendarBlocks: data.calendarBlocks.filter((block) => block.apartmentId !== id),
+			users: data.users.map((user) => ({
+				...user,
+				apartmentIds: user.apartmentIds.filter((apartmentId) => apartmentId !== id)
+			})),
 			bookingSync: {
 				...data.bookingSync,
 				mappings: data.bookingSync.mappings.filter((mapping) => mapping.apartmentId !== id)
@@ -117,6 +136,8 @@ export async function DELETE(_: Request, context: Context) {
 	if (!removed) {
 		return NextResponse.json({ error: 'Apartment not found.' }, { status: 404 });
 	}
+
+	invalidateAccessCache();
 
 	const retainedImages = new Set(
 		nextData.apartments.flatMap((apartment) => [apartment.coverImage, ...apartment.gallery])

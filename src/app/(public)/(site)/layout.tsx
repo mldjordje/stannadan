@@ -3,6 +3,7 @@ import { auth } from '@auth/authJs';
 import { CinematicHeader } from '@/components/site/cinematic/CinematicHeader';
 import { SiteFooter } from '@/components/site/cinematic/SiteFooter';
 import { MotionProvider } from '@/components/site/motion/MotionProvider';
+import StructuredData from '@/components/site/StructuredData';
 import { readStayData } from '@/lib/stay/store';
 import { UserRole } from '@/lib/stay/types';
 import './site-globals.css';
@@ -20,6 +21,10 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
 
 	return (
 		<MotionProvider className={`${instrumentSerif.variable} site-app`}>
+			<StructuredData
+				property={data.property}
+				apartments={data.apartments}
+			/>
 			<a
 				className="site-skip-link"
 				href="#main-content"

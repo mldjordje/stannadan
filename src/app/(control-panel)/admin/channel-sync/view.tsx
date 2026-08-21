@@ -100,13 +100,20 @@ function ChannelSyncAdminView({ initialApartments, initialSync }: ChannelSyncAdm
 	}
 
 	return (
-		<Stack spacing={3} padding={3}>
+		<Stack
+			spacing={3}
+			padding={3}
+		>
 			<div>
-				<Typography variant="h4" fontWeight={700}>
+				<Typography
+					variant="h4"
+					fontWeight={700}
+				>
 					Booking.com sync
 				</Typography>
 				<Typography color="text.secondary">
-					iCal import/export sloj je spreman odmah, a puni Connectivity API moze da se doda kada dobijes partner pristup.
+					iCal import/export sloj je spreman odmah, a puni Connectivity API moze da se doda kada dobijes
+					partner pristup.
 				</Typography>
 			</div>
 
@@ -114,11 +121,16 @@ function ChannelSyncAdminView({ initialApartments, initialSync }: ChannelSyncAdm
 
 			<Paper sx={{ borderRadius: 4, p: 3 }}>
 				<Stack spacing={3}>
-					<Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+					<Stack
+						direction={{ xs: 'column', md: 'row' }}
+						spacing={2}
+					>
 						<TextField
 							label="Property ID"
 							value={syncConfig.propertyId}
-							onChange={(event) => setSyncConfig((current) => ({ ...current, propertyId: event.target.value }))}
+							onChange={(event) =>
+								setSyncConfig((current) => ({ ...current, propertyId: event.target.value }))
+							}
 							fullWidth
 						/>
 						<TextField
@@ -126,7 +138,10 @@ function ChannelSyncAdminView({ initialApartments, initialSync }: ChannelSyncAdm
 							label="Mode"
 							value={syncConfig.mode}
 							onChange={(event) =>
-								setSyncConfig((current) => ({ ...current, mode: event.target.value as BookingSyncConfig['mode'] }))
+								setSyncConfig((current) => ({
+									...current,
+									mode: event.target.value as BookingSyncConfig['mode']
+								}))
 							}
 							fullWidth
 						>
@@ -155,7 +170,10 @@ function ChannelSyncAdminView({ initialApartments, initialSync }: ChannelSyncAdm
 								<TableRow key={mapping.apartmentId}>
 									<TableCell>
 										<Typography fontWeight={600}>{apartmentNames[mapping.apartmentId]}</Typography>
-										<Typography variant="body2" color="text.secondary">
+										<Typography
+											variant="body2"
+											color="text.secondary"
+										>
 											{mapping.roomName}
 										</Typography>
 									</TableCell>
@@ -175,11 +193,22 @@ function ChannelSyncAdminView({ initialApartments, initialSync }: ChannelSyncAdm
 							))}
 						</TableBody>
 					</Table>
-					<Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-						<Button variant="contained" onClick={saveConfig} disabled={loading}>
+					<Stack
+						direction={{ xs: 'column', md: 'row' }}
+						spacing={2}
+					>
+						<Button
+							variant="contained"
+							onClick={saveConfig}
+							disabled={loading}
+						>
 							Sacuvaj konfiguraciju
 						</Button>
-						<Button variant="outlined" onClick={runSync} disabled={loading}>
+						<Button
+							variant="outlined"
+							onClick={runSync}
+							disabled={loading}
+						>
 							Pokreni sync sada
 						</Button>
 					</Stack>
@@ -187,12 +216,21 @@ function ChannelSyncAdminView({ initialApartments, initialSync }: ChannelSyncAdm
 			</Paper>
 
 			<Paper sx={{ borderRadius: 4, p: 3 }}>
-				<Typography variant="h6" fontWeight={700} marginBottom={2}>
+				<Typography
+					variant="h6"
+					fontWeight={700}
+					marginBottom={2}
+				>
 					Poslednji sync logovi
 				</Typography>
 				<Stack spacing={1.5}>
 					{syncConfig.logs.map((log) => (
-						<Alert key={log.id} severity={log.status === 'error' ? 'error' : log.status === 'warning' ? 'warning' : 'success'}>
+						<Alert
+							key={log.id}
+							severity={
+								log.status === 'error' ? 'error' : log.status === 'warning' ? 'warning' : 'success'
+							}
+						>
 							{log.message}
 						</Alert>
 					))}

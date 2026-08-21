@@ -68,3 +68,9 @@ amplifytools.xcconfig
 .netlify
 
 .vercel
+
+# Build info
+tsconfig.tsbuildinfo
+
+# Local agent worktrees
+.claude/worktrees/

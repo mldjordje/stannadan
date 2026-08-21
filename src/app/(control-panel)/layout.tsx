@@ -3,7 +3,7 @@ import AdminShell from '@/components/admin/AdminShell';
 
 function Layout({ children }) {
 	return (
-		<AuthGuardRedirect auth={['admin']}>
+		<AuthGuardRedirect auth={['admin', 'owner']}>
 			<AdminShell>{children}</AdminShell>
 		</AuthGuardRedirect>
 	);

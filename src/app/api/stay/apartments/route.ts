@@ -3,7 +3,8 @@ import { NextResponse } from 'next/server';
 import { apartmentSchema } from '@/lib/stay/schema';
 import { readStayData, updateStayData } from '@/lib/stay/store';
 import { Apartment } from '@/lib/stay/types';
-import { requireAdmin } from '@/lib/auth/requireAdmin';
+import { requirePanelUser } from '@/lib/auth/requireAdmin';
+import { invalidateAccessCache } from '@auth/access';
 
 export async function GET() {
 	const data = await readStayData();
@@ -11,8 +12,11 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-	const unauthorized = await requireAdmin();
-	if (unauthorized) return unauthorized;
+	const guard = await requirePanelUser();
+
+	if ('response' in guard) {
+		return guard.response;
+	}
 
 	const payload = apartmentSchema.safeParse(await request.json());
 
@@ -29,6 +33,12 @@ export async function POST(request: Request) {
 	await updateStayData((data) => ({
 		...data,
 		apartments: [...data.apartments, apartment],
+		// An owner who adds an apartment becomes its manager straight away.
+		users: data.users.map((user) =>
+			user.role === 'owner' && user.email === guard.context.email
+				? { ...user, apartmentIds: [...user.apartmentIds, apartment.id] }
+				: user
+		),
 		bookingSync: {
 			...data.bookingSync,
 			mappings: [
@@ -42,6 +52,8 @@ export async function POST(request: Request) {
 			]
 		}
 	}));
+
+	invalidateAccessCache();
 
 	return NextResponse.json(apartment, { status: 201 });
 }

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { calendarBlockSchema } from '@/lib/stay/schema';
-import { updateStayData } from '@/lib/stay/store';
-import { requireAdmin } from '@/lib/auth/requireAdmin';
+import { readStayData, updateStayData } from '@/lib/stay/store';
+import { canManageApartment, requirePanelUser } from '@/lib/auth/requireAdmin';
 
 type Context = {
 	params: Promise<{
@@ -10,8 +10,11 @@ type Context = {
 };
 
 export async function PATCH(request: Request, context: Context) {
-	const unauthorized = await requireAdmin();
-	if (unauthorized) return unauthorized;
+	const guard = await requirePanelUser();
+
+	if ('response' in guard) {
+		return guard.response;
+	}
 
 	const { id } = await context.params;
 	const payload = calendarBlockSchema.partial().safeParse(await request.json());
@@ -20,10 +23,21 @@ export async function PATCH(request: Request, context: Context) {
 		return NextResponse.json({ error: payload.error.flatten() }, { status: 400 });
 	}
 
+	const data = await readStayData();
+	const existing = data.calendarBlocks.find((block) => block.id === id);
+
+	if (!existing || !canManageApartment(guard.context, existing.apartmentId)) {
+		return NextResponse.json({ error: 'Calendar block not found.' }, { status: 404 });
+	}
+
+	if (payload.data.apartmentId && !canManageApartment(guard.context, payload.data.apartmentId)) {
+		return NextResponse.json({ error: 'Nemas pristup ovom apartmanu.' }, { status: 403 });
+	}
+
 	let updatedBlock = null;
 
-	await updateStayData((data) => {
-		const calendarBlocks = data.calendarBlocks.map((block) => {
+	await updateStayData((current) => {
+		const calendarBlocks = current.calendarBlocks.map((block) => {
 			if (block.id !== id) {
 				return block;
 			}
@@ -37,7 +51,7 @@ export async function PATCH(request: Request, context: Context) {
 		});
 
 		return {
-			...data,
+			...current,
 			calendarBlocks
 		};
 	});
@@ -50,25 +64,24 @@ export async function PATCH(request: Request, context: Context) {
 }
 
 export async function DELETE(_: Request, context: Context) {
-	const unauthorized = await requireAdmin();
-	if (unauthorized) return unauthorized;
+	const guard = await requirePanelUser();
+
+	if ('response' in guard) {
+		return guard.response;
+	}
 
 	const { id } = await context.params;
-	let removed = false;
+	const data = await readStayData();
+	const existing = data.calendarBlocks.find((block) => block.id === id);
 
-	await updateStayData((data) => {
-		const calendarBlocks = data.calendarBlocks.filter((block) => block.id !== id);
-		removed = calendarBlocks.length !== data.calendarBlocks.length;
-
-		return {
-			...data,
-			calendarBlocks
-		};
-	});
-
-	if (!removed) {
+	if (!existing || !canManageApartment(guard.context, existing.apartmentId)) {
 		return NextResponse.json({ error: 'Calendar block not found.' }, { status: 404 });
 	}
+
+	await updateStayData((current) => ({
+		...current,
+		calendarBlocks: current.calendarBlocks.filter((block) => block.id !== id)
+	}));
 
 	return NextResponse.json({ success: true });
 }

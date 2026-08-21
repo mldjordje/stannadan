@@ -1,9 +1,10 @@
 import { redirect } from 'next/navigation';
-import CalendarAdminView from './view';
+import GuestsAdminView from './view';
+import { buildGuestDirectory } from '@/lib/stay/analytics';
 import { getAdminContext, scopeStayData } from '@/lib/auth/requireAdmin';
 import { readStayData } from '@/lib/stay/store';
 
-export default async function AdminCalendarPage() {
+export default async function AdminGuestsPage() {
 	const context = await getAdminContext();
 
 	if (!context) {
@@ -13,10 +14,9 @@ export default async function AdminCalendarPage() {
 	const data = scopeStayData(await readStayData(), context);
 
 	return (
-		<CalendarAdminView
-			initialApartments={data.apartments}
-			initialBlocks={data.calendarBlocks}
-			initialReservations={data.reservations}
+		<GuestsAdminView
+			guests={buildGuestDirectory(data.reservations)}
+			apartments={data.apartments.map(({ id, name }) => ({ id, name }))}
 		/>
 	);
 }
