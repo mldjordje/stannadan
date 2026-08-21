@@ -80,6 +80,10 @@ export type Apartment = {
 	locationNote: string;
 	amenities: StayAmenity[];
 	rules: string[];
+	/** Earliest arrival time, HH:mm. Guests may enter from this hour on the arrival day. */
+	checkInFrom: string;
+	/** Latest departure time, HH:mm. The unit is occupied until this hour on the departure day. */
+	checkOutUntil: string;
 };
 
 export type Reservation = {
@@ -96,6 +100,9 @@ export type Reservation = {
 	status: ReservationStatus;
 	notes?: string;
 	createdAt: string;
+	/** Overrides the apartment default for this stay, HH:mm. */
+	checkInTime?: string;
+	checkOutTime?: string;
 };
 
 export type CalendarBlock = {

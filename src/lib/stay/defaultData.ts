@@ -52,7 +52,9 @@ export const defaultStayData: StayData = {
 			featured: true,
 			locationNote: 'Centar Nisa, 300m od pesacke zone',
 			amenities: ['Self check-in', 'Fast Wi-Fi', 'Air conditioning', 'Kitchen', 'Workspace', 'Smart TV'],
-			rules: ['Check-in od 14:00', 'Nema pusenja', 'Mir posle 22h']
+			rules: ['Check-in od 14:00', 'Nema pusenja', 'Mir posle 22h'],
+			checkInFrom: '14:00',
+			checkOutUntil: '11:00'
 		},
 		{
 			id: 'apt-riverside-suite',
@@ -78,7 +80,9 @@ export const defaultStayData: StayData = {
 			featured: true,
 			locationNote: 'Uz kej, 10 minuta od centra',
 			amenities: ['Self check-in', 'Parking', 'Fast Wi-Fi', 'Kitchen', 'Washer', 'Balcony', 'Smart TV'],
-			rules: ['Check-in od 14:00', 'Dozvoljeni kucni ljubimci uz najavu', 'Zabave nisu dozvoljene']
+			rules: ['Check-in od 14:00', 'Dozvoljeni kucni ljubimci uz najavu', 'Zabave nisu dozvoljene'],
+			checkInFrom: '14:00',
+			checkOutUntil: '11:00'
 		},
 		{
 			id: 'apt-delta-family',
@@ -103,8 +107,18 @@ export const defaultStayData: StayData = {
 			reviewCount: 63,
 			featured: false,
 			locationNote: 'Blizu Delte, dobar pristup autoputu',
-			amenities: ['Self check-in', 'Parking', 'Fast Wi-Fi', 'Kitchen', 'Washer', 'Air conditioning', 'Breakfast option'],
-			rules: ['Check-in od 15:00', 'Nema pusenja', 'Tihi ulaz u zgradu']
+			amenities: [
+				'Self check-in',
+				'Parking',
+				'Fast Wi-Fi',
+				'Kitchen',
+				'Washer',
+				'Air conditioning',
+				'Breakfast option'
+			],
+			rules: ['Check-in od 15:00', 'Nema pusenja', 'Tihi ulaz u zgradu'],
+			checkInFrom: '15:00',
+			checkOutUntil: '10:00'
 		}
 	],
 	reservations: [
@@ -180,8 +194,7 @@ export const defaultStayData: StayData = {
 		state: 'needs-setup',
 		propertyId: 'nis-city-apartments',
 		docsUrl: 'https://developers.booking.com/',
-		notes:
-			'Podesi import URL za svaki apartman da bi se Booking.com rezervacije automatski povlacile. Export linkove iz ove aplikacije mozes uneti u Booking.com kalendar ako nalog podrzava iCal sync.',
+		notes: 'Podesi import URL za svaki apartman da bi se Booking.com rezervacije automatski povlacile. Export linkove iz ove aplikacije mozes uneti u Booking.com kalendar ako nalog podrzava iCal sync.',
 		lastSyncAt: null,
 		mappings: [
 			{

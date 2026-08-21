@@ -65,7 +65,13 @@ function normalizeStayData(data: StayData | undefined | null): StayData {
 
 	return {
 		...data,
-		users: Array.isArray(data.users) ? data.users : []
+		users: Array.isArray(data.users) ? data.users : [],
+		// Check-in and check-out hours arrived later than the first apartments.
+		apartments: (data.apartments ?? []).map((apartment) => ({
+			...apartment,
+			checkInFrom: apartment.checkInFrom || '14:00',
+			checkOutUntil: apartment.checkOutUntil || '11:00'
+		}))
 	};
 }
 

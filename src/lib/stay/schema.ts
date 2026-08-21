@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+const timeString = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Vreme mora biti u formatu HH:mm');
+
 export const apartmentSchema = z.object({
 	name: z.string().min(2),
 	slug: z.string().min(2),
@@ -18,7 +20,9 @@ export const apartmentSchema = z.object({
 	featured: z.coerce.boolean(),
 	locationNote: z.string().min(2),
 	amenities: z.array(z.string().min(1)).min(1),
-	rules: z.array(z.string().min(1)).min(1)
+	rules: z.array(z.string().min(1)).min(1),
+	checkInFrom: timeString.default('14:00'),
+	checkOutUntil: timeString.default('11:00')
 });
 
 export const reservationSchema = z.object({
@@ -32,7 +36,9 @@ export const reservationSchema = z.object({
 	totalPrice: z.coerce.number().optional(),
 	source: z.enum(['direct', 'booking.com', 'manual']),
 	status: z.enum(['pending', 'confirmed', 'checked-in', 'checked-out', 'cancelled']),
-	notes: z.string().optional().default('')
+	notes: z.string().optional().default(''),
+	checkInTime: timeString.optional(),
+	checkOutTime: timeString.optional()
 });
 
 export const calendarBlockSchema = z.object({

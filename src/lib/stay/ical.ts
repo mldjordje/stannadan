@@ -63,18 +63,15 @@ export function parseIcsEvents(icsContent: string) {
 
 	return rawEvents
 		.map((rawEvent) => {
-			const startMatch =
-				rawEvent.match(/DTSTART(?:;VALUE=DATE)?:(\d{8})/) ?? rawEvent.match(/DTSTART.*:(\d{8})/);
-			const endMatch =
-				rawEvent.match(/DTEND(?:;VALUE=DATE)?:(\d{8})/) ?? rawEvent.match(/DTEND.*:(\d{8})/);
+			const startMatch = rawEvent.match(/DTSTART(?:;VALUE=DATE)?:(\d{8})/) ?? rawEvent.match(/DTSTART.*:(\d{8})/);
+			const endMatch = rawEvent.match(/DTEND(?:;VALUE=DATE)?:(\d{8})/) ?? rawEvent.match(/DTEND.*:(\d{8})/);
 			const summaryMatch = rawEvent.match(/SUMMARY:(.+)/);
 
 			if (!startMatch || !endMatch) {
 				return null;
 			}
 
-			const toDate = (value: string) =>
-				`${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
+			const toDate = (value: string) => `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
 
 			return {
 				checkIn: toDate(startMatch[1]),

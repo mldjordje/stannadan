@@ -29,6 +29,8 @@ type FormState = {
 	locationNote: string;
 	amenities: string;
 	rules: string;
+	checkInFrom: string;
+	checkOutUntil: string;
 };
 type FieldErrors = Partial<Record<keyof FormState, string>>;
 
@@ -50,7 +52,9 @@ const emptyForm: FormState = {
 	featured: false,
 	locationNote: 'Centar Niša',
 	amenities: 'Self check-in, Fast Wi-Fi, Air conditioning, Kitchen',
-	rules: 'Check-in od 14:00, Nema pušenja'
+	rules: 'Check-in od 14:00, Nema pušenja',
+	checkInFrom: '14:00',
+	checkOutUntil: '11:00'
 };
 
 const labels: Partial<Record<keyof FormState, string>> = {
@@ -70,7 +74,9 @@ const labels: Partial<Record<keyof FormState, string>> = {
 	reviewCount: 'Broj recenzija',
 	locationNote: 'Lokacija',
 	amenities: 'Sadržaji',
-	rules: 'Pravila'
+	rules: 'Pravila',
+	checkInFrom: 'Ulazak od',
+	checkOutUntil: 'Izlazak do'
 };
 
 function toForm(apartment: Apartment): FormState {
@@ -85,7 +91,9 @@ function toForm(apartment: Apartment): FormState {
 		rating: String(apartment.rating),
 		reviewCount: String(apartment.reviewCount),
 		amenities: apartment.amenities.join(', '),
-		rules: apartment.rules.join(', ')
+		rules: apartment.rules.join(', '),
+		checkInFrom: apartment.checkInFrom || '14:00',
+		checkOutUntil: apartment.checkOutUntil || '11:00'
 	};
 }
 
@@ -111,6 +119,8 @@ function toPayload(form: FormState) {
 		reviewCount: numeric(form.reviewCount),
 		featured: form.featured,
 		locationNote: form.locationNote.trim(),
+		checkInFrom: form.checkInFrom,
+		checkOutUntil: form.checkOutUntil,
 		amenities: form.amenities
 			.split(',')
 			.map((item) => item.trim())
@@ -367,6 +377,22 @@ export default function ApartmentsAdminView({ initialApartments }: Props) {
 									onChange={(value) => update(key, value)}
 								/>
 							))}
+						</div>
+						<div className={styles.fieldsSmall}>
+							<Field
+								type="time"
+								label="Ulazak od"
+								value={form.checkInFrom}
+								error={errors.checkInFrom}
+								onChange={(value) => update('checkInFrom', value)}
+							/>
+							<Field
+								type="time"
+								label="Izlazak do"
+								value={form.checkOutUntil}
+								error={errors.checkOutUntil}
+								onChange={(value) => update('checkOutUntil', value)}
+							/>
 						</div>
 					</section>
 					<section className={styles.formSection}>
