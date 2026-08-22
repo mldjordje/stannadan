@@ -14,6 +14,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import PeopleIcon from '@mui/icons-material/PeopleAltOutlined';
 import ReceiptIcon from '@mui/icons-material/ReceiptLongOutlined';
 import SearchIcon from '@mui/icons-material/SearchOutlined';
+import HelpIcon from '@mui/icons-material/HelpOutlineOutlined';
 import SyncIcon from '@mui/icons-material/SyncAltOutlined';
 import useUser from '@auth/useUser';
 import CommandPalette from './CommandPalette';
@@ -27,7 +28,8 @@ const links = [
 	{ href: '/admin/guests', label: 'Gosti', Icon: GuestsIcon },
 	{ href: '/admin/analytics', label: 'Analitika', Icon: AnalyticsIcon },
 	{ href: '/admin/channel-sync', label: 'Booking sync', Icon: SyncIcon, adminOnly: true },
-	{ href: '/admin/users', label: 'Korisnici i vlasnici', Icon: PeopleIcon, adminOnly: true }
+	{ href: '/admin/users', label: 'Korisnici i vlasnici', Icon: PeopleIcon, adminOnly: true },
+	{ href: '/admin/tutorial', label: 'Uputstvo', Icon: HelpIcon }
 ];
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {

@@ -34,7 +34,14 @@ const pageCommands: Command[] = [
 	{ id: 'page-analytics', group: 'Stranice', title: 'Analitika', href: '/admin/analytics' },
 	{ id: 'page-apartments', group: 'Stranice', title: 'Apartmani', href: '/admin/apartments' },
 	{ id: 'page-sync', group: 'Stranice', title: 'Booking sync', href: '/admin/channel-sync' },
-	{ id: 'page-users', group: 'Stranice', title: 'Korisnici', href: '/admin/users' }
+	{ id: 'page-users', group: 'Stranice', title: 'Korisnici', href: '/admin/users' },
+	{
+		id: 'page-tutorial',
+		group: 'Stranice',
+		title: 'Uputstvo',
+		subtitle: 'Kako se koristi admin i Booking veza',
+		href: '/admin/tutorial'
+	}
 ];
 
 /**
